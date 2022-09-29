@@ -27,4 +27,8 @@ dependencies {
     // Note: A 'libOpenCvAndroid453.so' file is dropped onto the Robot Controller in part
     // With this.
     implementation 'org.ftclib.ftclib:vision:2.0.1' // Vision
+
+    // OpenRC Implementation
+    implementation 'org.apache.commons:commons-math3:3.6.1'
+    implementation 'com.acmerobotics.roadrunner:core:0.5.5'
 }
