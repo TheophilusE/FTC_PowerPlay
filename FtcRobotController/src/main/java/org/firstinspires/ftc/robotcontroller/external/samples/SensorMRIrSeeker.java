@@ -50,10 +50,12 @@ import com.qualcomm.robotcore.hardware.IrSeekerSensor;
  */
 @TeleOp(name = "Sensor: MR IR Seeker", group = "Sensor")
 @Disabled
-public class SensorMRIrSeeker extends LinearOpMode {
+public class SensorMRIrSeeker extends LinearOpMode
+{
 
   @Override
-  public void runOpMode() {
+  public void runOpMode()
+  {
 
     IrSeekerSensor irSeeker;    // Hardware Device Object
 
@@ -63,16 +65,16 @@ public class SensorMRIrSeeker extends LinearOpMode {
     // wait for the start button to be pressed.
     waitForStart();
 
-    while (opModeIsActive())  {
+    while (opModeIsActive())
+    {
 
       // Ensure we have a IR signal
       if (irSeeker.signalDetected())
       {
         // Display angle and strength
-        telemetry.addData("Angle",    irSeeker.getAngle());
+        telemetry.addData("Angle", irSeeker.getAngle());
         telemetry.addData("Strength", irSeeker.getStrength());
-      }
-      else
+      } else
       {
         // Display loss of signal
         telemetry.addData("Seeker", "Signal Lost");
