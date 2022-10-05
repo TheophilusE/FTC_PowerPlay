@@ -7,7 +7,7 @@ import com.qualcomm.robotcore.hardware.DcMotorEx;
 import org.firstinspires.ftc.teamcode.opmode.OpModeBase;
 
 
-@TeleOp(name = "XDriveTest", group = "Test")
+@TeleOp(name = "XDriveTest", group = "TeleOpUnitTest")
 public class HolonomicDriveTest extends OpModeBase
 {
   @Override
