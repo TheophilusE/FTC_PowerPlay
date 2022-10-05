@@ -4,6 +4,7 @@ import com.arcrobotics.ftclib.command.CommandOpMode;
 import com.arcrobotics.ftclib.command.SubsystemBase;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
+import org.firstinspires.ftc.teamcode.control.derived.DriveEngine;
 import org.firstinspires.ftc.teamcode.hardware.commands.BulkCacheCommand;
 
 import java.util.ArrayList;
@@ -13,8 +14,18 @@ import java.util.Map;
 
 public abstract class OpModeBase extends CommandOpMode
 {
+  // Tracked Variables
   private ElapsedTime elapsedTime         = null;
   private double      executionsPerSecond = 1.0 / 60.0;
+  private double      robotAngleOffset    = 0;
+  private boolean     previousState       = false;
+
+  // Engine Core
+  protected DriveEngine driveEngine = null;
+
+  // Accessors
+
+  // Sensors
 
   // Containers
   /**
@@ -35,6 +46,12 @@ public abstract class OpModeBase extends CommandOpMode
 
     // Clear the bulk cache command every iteration
     schedule(new BulkCacheCommand(hardwareMap));
+
+    driveEngine = new DriveEngine(hardwareMap);
+
+    registerAccessors();
+
+    registerSubsystems();
 
     // Instantiate a new elapsed time object.
     if (elapsedTime != null)
@@ -79,6 +96,16 @@ public abstract class OpModeBase extends CommandOpMode
   public void setExecutionsPerSecond(double executionsPerSecond)
   {
     this.executionsPerSecond = 1.0 / executionsPerSecond;
+  }
+
+  /* Register motors and sensors */
+  public void registerAccessors()
+  {
+  }
+
+  /* Register subsystems */
+  public void registerSubsystems()
+  {
   }
 
   /**

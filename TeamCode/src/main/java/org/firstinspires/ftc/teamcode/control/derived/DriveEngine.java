@@ -26,6 +26,9 @@ import com.qualcomm.robotcore.hardware.PIDFCoefficients;
 import com.qualcomm.robotcore.hardware.VoltageSensor;
 import com.qualcomm.robotcore.hardware.configuration.typecontainers.MotorConfigurationType;
 
+import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
+import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
+import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
 import org.firstinspires.ftc.teamcode.control.trajectorysequence.TrajectorySequence;
 import org.firstinspires.ftc.teamcode.control.trajectorysequence.TrajectorySequenceBuilder;
 import org.firstinspires.ftc.teamcode.control.trajectorysequence.TrajectorySequenceRunner;
@@ -346,8 +349,41 @@ public class DriveEngine extends MecanumDrive
                                                   ));
   }
 
+  public double getHeadingOffset(double offset)
+  {
+    // Get Robot heading given an offset in radians
+    double angle = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.RADIANS).firstAngle;
+    angle = AngleUnit.normalizeRadians(angle - offset);
+    return angle;
+  }
+
   public static TrajectoryAccelerationConstraint getAccelerationConstraint(double maxAccel)
   {
     return new ProfileAccelerationConstraint(maxAccel);
+  }
+
+  public DcMotorEx getLeftFrontMotor()
+  {
+    return leftFront;
+  }
+
+  public DcMotorEx getLeftRearMotor()
+  {
+    return leftRear;
+  }
+
+  public DcMotorEx getRightFrontMotor()
+  {
+    return rightFront;
+  }
+
+  public DcMotorEx getRightRearMotor()
+  {
+    return rightRear;
+  }
+
+  public BNO055IMU getIMU()
+  {
+    return imu;
   }
 }
