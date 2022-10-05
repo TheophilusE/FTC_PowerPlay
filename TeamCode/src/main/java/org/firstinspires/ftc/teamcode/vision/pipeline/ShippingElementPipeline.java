@@ -36,10 +36,10 @@ public class ShippingElementPipeline extends OpenCvPipeline
   // Ideally because we can control the color, a solid white or black would be good, or something like that
   // volatile because it's accessed by the opmode thread with no sync
   // private volatile Defines.HubLevel hubLevel       = Defines.HubLevel.BOTTOM;
-  private final    Mat              yCrCbMat       = new Mat();
-  private final    Mat              cBMat          = new Mat();
-  private          MatSavingState   matSavingState = MatSavingState.NONE_REQUESTED;
-  private final    Mat              matToSave      = new Mat();
+  private final Mat            yCrCbMat       = new Mat();
+  private final Mat            cBMat          = new Mat();
+  private       MatSavingState matSavingState = MatSavingState.NONE_REQUESTED;
+  private final Mat            matToSave      = new Mat();
 
   /*
   public Defines.HubLevel getHubLevel()
