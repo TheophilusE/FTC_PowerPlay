@@ -17,8 +17,8 @@ public abstract class OpModeBase extends CommandOpMode
   // Tracked Variables
   private ElapsedTime elapsedTime         = null;
   private double      executionsPerSecond = 1.0 / 60.0;
-  private double      robotAngleOffset    = 0;
-  private boolean     previousState       = false;
+  protected double      robotAngleOffset    = 0;
+  protected boolean     previousState       = false;
 
   // Engine Core
   protected DriveEngine driveEngine = null;
@@ -28,6 +28,7 @@ public abstract class OpModeBase extends CommandOpMode
   // Sensors
 
   // Containers
+
   /**
    * The list of components this entity is composed of.
    */
@@ -41,22 +42,83 @@ public abstract class OpModeBase extends CommandOpMode
   @Override
   public void initialize()
   {
-    // Clear any previous states
-    reset();
+    {
+      telemetry.addLine("> Reset Command Scheduler...");
+      telemetry.update();
 
-    // Clear the bulk cache command every iteration
-    schedule(new BulkCacheCommand(hardwareMap));
+      // Clear any previous states
+      reset();
+    }
 
-    driveEngine = new DriveEngine(hardwareMap);
+    {
+      telemetry.addLine("> Schedule Bulk Cache Command...");
+      telemetry.update();
 
-    registerAccessors();
+      // Clear the bulk cache command every iteration
+      schedule(new BulkCacheCommand(hardwareMap));
+    }
 
-    registerSubsystems();
+    {
+      telemetry.addLine("> Instantiate Drive Engine...");
+      telemetry.update();
+
+      driveEngine = new DriveEngine(hardwareMap);
+    }
+
+    {
+      telemetry.addLine("> Register Accessors...");
+      telemetry.update();
+
+      registerAccessors();
+    }
+
+    {
+      telemetry.addLine("> Register Subsystems...");
+      telemetry.update();
+
+      registerSubsystems();
+    }
 
     // Instantiate a new elapsed time object.
     if (elapsedTime == null)
     {
       elapsedTime = new ElapsedTime();
+    }
+
+    telemetry.addLine("> Ready for Start...");
+    telemetry.update();
+  }
+
+  /*
+   * Execute when the initialize button is pressed but the the start button has not.
+   */
+  @Override
+  public void waitForStart()
+  {
+    // Do not call default constructor!
+    // It puts the thread of execution to sleep, until Start is pressed, or the thread terminates.
+
+    switch (Defines.DRIVE_MODE)
+    {
+      case FIELD_CENTRIC_IMU:
+      {
+        while (!isStarted() && !isStopRequested())
+        {
+          telemetry.addLine("> Current offset is " + robotAngleOffset);
+          telemetry.addLine("> Press left bumper to reset to current heading");
+          telemetry.update();
+
+          if (gamepad1.left_bumper)
+          {
+            robotAngleOffset = driveEngine.getHeadingOffset(robotAngleOffset);
+          }
+        }
+        break;
+      }
+      default:
+      {
+        break;
+      }
     }
   }
 
@@ -74,6 +136,8 @@ public abstract class OpModeBase extends CommandOpMode
 
     // Prepare counter for next execution.
     elapsedTime.reset();
+
+    telemetry.update();
   }
 
   /*
