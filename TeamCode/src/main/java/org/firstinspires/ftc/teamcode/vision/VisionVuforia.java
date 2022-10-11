@@ -26,6 +26,7 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 
 import org.firstinspires.ftc.robotcore.external.ClassFactory;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer;
+import org.firstinspires.ftc.teamcode.opmode.Defines;
 import org.opencv.core.Mat;
 import org.opencv.core.Point;
 import org.opencv.core.Scalar;
@@ -40,8 +41,6 @@ public class VisionVuforia
   private static final String           VUFORIA_KEY = "AeadzuH/////AAABmdXJEThQTkAoulqgbT87Ql2GRM51eA6BnJ8K4kZVIlgRqiAPWB1I/MXJIsry32qWadcSRRRInBTRHIxVRhtsIrOhnM+1bXFTopE4n6/3/EZ4HdLfOB3pnouUXpBKIx3z8ubYMcHJ1gXVoPO8h6fZyURNhWLvTufKP0FvuDMTvnTb2pnxod5vMP1i1DRYrYKMZcwQznRS4tlM5a+yCdGUKRdit5JGx5ClctXIEEyGCyisWSvWglilVOeQi5a4pgjp3KmHJacFiFRTJubphUyB5rVtoKV0yozFK1xztnSrSEHXWcOiM2WUL4swQKnfPl3qzZRcoc83GF+JSQ5eEMKbvrxd62FtBgkPsDVjOCP+pq/Q";
   protected            VuforiaLocalizer vuforia     = null;
   protected            OpenCvCamera     openCvCamera;
-
-  public static boolean ENABLE_CAMERA_STREAM = false;
 
   public VisionVuforia(HardwareMap hardwareMap)
   {
@@ -89,7 +88,7 @@ public class VisionVuforia
     });
 
     // Stream to FTC Dashboard. Set the ENABLE_CAMERA_STREAM to false to disable.
-    if (ENABLE_CAMERA_STREAM)
+    if (Defines.ENABLE_CAMERA_STREAM)
     {
       FtcDashboard.getInstance().startCameraStream(openCvCamera, 10);
     }

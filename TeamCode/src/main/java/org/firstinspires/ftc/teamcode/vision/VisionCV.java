@@ -5,6 +5,7 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
+import org.firstinspires.ftc.teamcode.opmode.Defines;
 import org.firstinspires.ftc.teamcode.vision.pipeline.ShippingElementPipeline;
 import org.openftc.easyopencv.OpenCvCamera;
 import org.openftc.easyopencv.OpenCvCameraFactory;
@@ -15,8 +16,6 @@ public class VisionCV
 {
   private final OpenCvWebcam            webcam;
   private final ShippingElementPipeline pipeline;
-
-  public static boolean ENABLE_CAMERA_STREAM = false;
 
   public VisionCV(HardwareMap hardwareMap)
   {
@@ -55,7 +54,7 @@ public class VisionCV
     });
 
     // Stream to FTC Dashboard. Set the ENABLE_CAMERA_STREAM to false to disable.
-    if (ENABLE_CAMERA_STREAM)
+    if (Defines.ENABLE_CAMERA_STREAM)
     {
       FtcDashboard.getInstance().startCameraStream(webcam, 10);
     }
