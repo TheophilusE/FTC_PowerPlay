@@ -49,4 +49,7 @@ public final class Defines
 
   /// Enable / Disable Camera Stream to the Dashboard.
   public static boolean ENABLE_CAMERA_STREAM = true;
+
+  /// Specify the number of frames a second to render onto the Dashboard.
+  public static int STREAM_MAX_FPS = 10;
 }

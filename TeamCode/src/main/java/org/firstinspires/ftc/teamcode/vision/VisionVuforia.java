@@ -90,7 +90,7 @@ public class VisionVuforia
     // Stream to FTC Dashboard. Set the ENABLE_CAMERA_STREAM to false to disable.
     if (Defines.ENABLE_CAMERA_STREAM)
     {
-      FtcDashboard.getInstance().startCameraStream(openCvCamera, 10);
+      FtcDashboard.getInstance().startCameraStream(openCvCamera, Defines.STREAM_MAX_FPS);
     }
   }
 
