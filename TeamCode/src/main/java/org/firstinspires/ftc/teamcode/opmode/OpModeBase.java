@@ -54,7 +54,7 @@ public abstract class OpModeBase extends CommandOpMode
     registerSubsystems();
 
     // Instantiate a new elapsed time object.
-    if (elapsedTime != null)
+    if (elapsedTime == null)
     {
       elapsedTime = new ElapsedTime();
     }
