@@ -2,12 +2,14 @@ package org.firstinspires.ftc.teamcode.opmode.manual;
 
 import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.acmerobotics.roadrunner.geometry.Vector2d;
+import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.teamcode.control.util.Extensions;
 import org.firstinspires.ftc.teamcode.opmode.Defines;
 import org.firstinspires.ftc.teamcode.opmode.OpModeBase;
 
+@TeleOp(name = "ManualDrive", group = "TeleOp")
 public class ManualDrive extends OpModeBase
 {
   @Override

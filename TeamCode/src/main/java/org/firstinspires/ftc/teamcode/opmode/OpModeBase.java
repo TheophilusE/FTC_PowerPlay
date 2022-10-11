@@ -15,8 +15,8 @@ import java.util.Map;
 public abstract class OpModeBase extends CommandOpMode
 {
   // Tracked Variables
-  private ElapsedTime elapsedTime         = null;
-  private double      executionsPerSecond = 1.0 / 60.0;
+  private   ElapsedTime elapsedTime         = null;
+  private   double      executionsPerSecond = 1.0 / 60.0;
   protected double      robotAngleOffset    = 0;
   protected boolean     previousState       = false;
 
@@ -85,7 +85,7 @@ public abstract class OpModeBase extends CommandOpMode
       elapsedTime = new ElapsedTime();
     }
 
-    telemetry.addLine("> Ready for Start...");
+    telemetry.addLine("> Ready for Start.");
     telemetry.update();
   }
 
@@ -113,12 +113,16 @@ public abstract class OpModeBase extends CommandOpMode
             robotAngleOffset = driveEngine.getHeadingOffset(robotAngleOffset);
           }
         }
-        break;
       }
+      break;
+
       default:
       {
-        break;
+        while (!isStarted() && !isStopRequested())
+        {
+        }
       }
+      break;
     }
   }
 
