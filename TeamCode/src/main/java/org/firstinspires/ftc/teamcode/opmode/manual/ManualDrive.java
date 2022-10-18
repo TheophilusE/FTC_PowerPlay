@@ -33,9 +33,9 @@ public class ManualDrive extends OpModeBase
 
     // Update telemetry
     {
-      telemetry.addData(">", "Run Time (s) (%.2f)", getRuntime());
-      telemetry.addData(">", "Motors: Left Front Power (%.2f), Right Front Power (%.2f)", driveEngine.getLeftFrontMotor().getPower(), driveEngine.getRightFrontMotor().getPower());
-      telemetry.addData(">", "Motors: Left Back Power (%.2f), Right Back Power (%.2f)", driveEngine.getLeftRearMotor().getPower(), driveEngine.getRightRearMotor().getPower());
+      telemetry.addData(">", " Run Time (s) (%.2f)", getRuntime());
+      telemetry.addData(">", " Motors: Left Front Power (%.2f), Right Front Power (%.2f)", driveEngine.getLeftFrontMotor().getPower(), driveEngine.getRightFrontMotor().getPower());
+      telemetry.addData(">", " Motors: Left Back Power (%.2f), Right Back Power (%.2f)", driveEngine.getLeftRearMotor().getPower(), driveEngine.getRightRearMotor().getPower());
     }
   }
 
@@ -74,14 +74,41 @@ public class ManualDrive extends OpModeBase
 
       case ROBOT_CENTRIC_MECANUM:
       {
-        double length     = Math.hypot(gamepad1.left_stick_x, -gamepad1.left_stick_y);
-        double robotAngle = Math.atan2(-gamepad1.left_stick_y, gamepad1.left_stick_x) - Math.PI / 4;
-        double rightX     = gamepad1.right_stick_x;
+        double length   = Math.hypot(gamepad1.left_stick_x, -gamepad1.left_stick_y);
+        double angle    = Math.atan2(-gamepad1.left_stick_y, gamepad1.left_stick_x) - (Math.PI * 0.25);
+        double rotation = gamepad1.right_stick_x;
 
-        final double leftFrontPower  = length * Math.cos(robotAngle) + rightX;
-        final double rightFrontPower = length * Math.sin(robotAngle) - rightX;
-        final double leftRearPower   = length * Math.sin(robotAngle) + rightX;
-        final double rightRearPower  = length * Math.cos(robotAngle) - rightX;
+        double leftFrontPower  = length * Math.cos(angle);
+        double leftRearPower   = length * Math.sin(angle);
+        double rightRearPower  = length * Math.cos(angle);
+        double rightFrontPower = length * Math.sin(angle);
+
+        // If the length of the angle is greater than 1, then we must restrict all power values such
+        // that the length is 1 as defined by the Unit Circle.
+        if (length > 1.0)
+        {
+          leftFrontPower /= length;
+          leftRearPower /= length;
+          rightRearPower /= length;
+          rightFrontPower /= length;
+        }
+
+        // Apply Rotation
+        leftFrontPower += rotation;
+        leftRearPower += rotation;
+        rightRearPower -= rotation;
+        rightFrontPower -= rotation;
+
+        // Ensure that the length of the vector is the 1
+        double rotLength = Math.hypot(leftFrontPower, rightFrontPower);
+        leftFrontPower /= rotLength;
+        leftRearPower /= rotLength;
+        rightRearPower /= rotLength;
+        rightFrontPower /= rotLength;
+
+        telemetry.addData("> ", " Length:   (%.2f)", length);
+        telemetry.addData("> ", " Angle:    (%.2f)", angle);
+        telemetry.addData("> ", " Rotation: (%.2f)", rotation);
 
         driveEngine.setMotorPowers(leftFrontPower * Defines.DRIVE_COEFFICIENT,
                                    leftRearPower * Defines.DRIVE_COEFFICIENT,
