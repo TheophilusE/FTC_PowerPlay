@@ -106,6 +106,9 @@ public class ManualDrive extends OpModeBase
         rightRearPower /= rotLength;
         rightFrontPower /= rotLength;
 
+        telemetry.addData(">", " Left Stick  X: (%.2f)", gamepad1.left_stick_x);
+        telemetry.addData(">", " Left Stick  Y: (%.2f)", gamepad1.left_stick_y);
+        telemetry.addData(">", " Right Stick X: (%.2f)", gamepad1.right_stick_x);
         telemetry.addData("> ", " Length:   (%.2f)", length);
         telemetry.addData("> ", " Angle:    (%.2f)", angle);
         telemetry.addData("> ", " Rotation: (%.2f)", rotation);
