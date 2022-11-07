@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode.opmode.manual;
 
+import com.acmerobotics.dashboard.config.Config;
 import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.acmerobotics.roadrunner.geometry.Vector2d;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
@@ -9,6 +10,7 @@ import org.firstinspires.ftc.teamcode.control.util.Extensions;
 import org.firstinspires.ftc.teamcode.opmode.Defines;
 import org.firstinspires.ftc.teamcode.opmode.OpModeBase;
 
+@Config
 @TeleOp(name = "ManualDrive", group = "TeleOp")
 public class ManualDrive extends OpModeBase
 {
@@ -64,11 +66,17 @@ public class ManualDrive extends OpModeBase
         double rightFrontPower = (y - x - rx) / denominator;
         double rightRearPower  = (y + x - rx) / denominator;
 
-        driveEngine.setMotorPowers(leftFrontPower * Defines.DRIVE_COEFFICIENT,
-                                   leftRearPower * Defines.DRIVE_COEFFICIENT,
-                                   rightRearPower * Defines.DRIVE_COEFFICIENT,
-                                   rightFrontPower * Defines.DRIVE_COEFFICIENT
-                                  );
+        // Apply driver scaling
+        leftFrontPower *= Defines.DRIVE_COEFFICIENT;
+        leftRearPower *= Defines.DRIVE_COEFFICIENT;
+        rightRearPower *= Defines.DRIVE_COEFFICIENT;
+        rightFrontPower *= Defines.DRIVE_COEFFICIENT;
+
+        telemetry.addData(">", " Left Stick  X: (%.2f)", x);
+        telemetry.addData(">", " Left Stick  Y: (%.2f)", y);
+        telemetry.addData(">", " Right Stick X: (%.2f)", rx);
+
+        driveEngine.setMotorPowers(leftFrontPower, leftRearPower, rightRearPower, rightFrontPower);
       }
       break;
 
@@ -106,18 +114,20 @@ public class ManualDrive extends OpModeBase
         rightRearPower /= rotLength;
         rightFrontPower /= rotLength;
 
+        // Apply driver scaling
+        leftFrontPower *= Defines.DRIVE_COEFFICIENT;
+        leftRearPower *= Defines.DRIVE_COEFFICIENT;
+        rightRearPower *= Defines.DRIVE_COEFFICIENT;
+        rightFrontPower *= Defines.DRIVE_COEFFICIENT;
+
         telemetry.addData(">", " Left Stick  X: (%.2f)", gamepad1.left_stick_x);
-        telemetry.addData(">", " Left Stick  Y: (%.2f)", gamepad1.left_stick_y);
+        telemetry.addData(">", " Left Stick  Y: (%.2f)", -gamepad1.left_stick_y);
         telemetry.addData(">", " Right Stick X: (%.2f)", gamepad1.right_stick_x);
         telemetry.addData("> ", " Length:   (%.2f)", length);
         telemetry.addData("> ", " Angle:    (%.2f)", angle);
         telemetry.addData("> ", " Rotation: (%.2f)", rotation);
 
-        driveEngine.setMotorPowers(leftFrontPower * Defines.DRIVE_COEFFICIENT,
-                                   leftRearPower * Defines.DRIVE_COEFFICIENT,
-                                   rightRearPower * Defines.DRIVE_COEFFICIENT,
-                                   rightFrontPower * Defines.DRIVE_COEFFICIENT
-                                  );
+        driveEngine.setMotorPowers(leftFrontPower, leftRearPower, rightRearPower, rightFrontPower);
       }
       break;
 
