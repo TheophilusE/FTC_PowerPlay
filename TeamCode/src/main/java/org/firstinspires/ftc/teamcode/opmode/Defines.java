@@ -42,6 +42,8 @@ public final class Defines
     ROBOT_CENTRIC_MECANUM,
     FIELD_CENTRIC_GAMEPAD,
     FIELD_CENTRIC_IMU,
+
+    ENUM_COUNT
   }
 
   /// Drive mode configuration. Publicly accessible variable to access current drive mode config.
@@ -65,7 +67,9 @@ public final class Defines
     ALIGN_HEADING,
 
     /// Indicates that the controller should process logic through its vision subsystem.
-    EVALUATE_VISION
+    EVALUATE_VISION,
+
+    ENUM_COUNT
   }
 
   /// Specifies if autonomous programs should use their default state or start at a set state.
@@ -79,4 +83,24 @@ public final class Defines
 
   /// Specify the number of frames a second to render onto the Dashboard.
   public static int STREAM_MAX_FPS = 10;
+
+  /*
+   * Enumeration of the park signals, wherein the robot should park in the Autonomous period.
+   */
+  public enum ParkTargetSignal
+  {
+    /// No park signal given.
+    SIGNAL_NONE,
+
+    /// Leftmost park target.
+    SIGNAL_ONE,
+
+    /// Middle park target.
+    SIGNAL_TWO,
+
+    /// Rightmost park target.
+    SIGNAL_THREE,
+
+    ENUM_COUNT
+  }
 }
