@@ -22,6 +22,8 @@ public class AutonomousDrive extends OpModeBase
   @Override
   public void update()
   {
+    // Update Finite State Machine
+    updateFSM();
   }
 
   public void updateFSM()
