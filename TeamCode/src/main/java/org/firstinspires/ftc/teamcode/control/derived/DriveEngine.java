@@ -332,6 +332,11 @@ public class DriveEngine extends MecanumDrive
     rightFront.setPower(v3);
   }
 
+  public void setZeroPower()
+  {
+    setMotorPowers(0.0, 0.0, 0.0, 0.0);
+  }
+
   @Override
   public double getRawExternalHeading()
   {

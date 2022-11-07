@@ -23,4 +23,16 @@ public class AutonomousDrive extends OpModeBase
   public void update()
   {
   }
+
+  public void updateFSM()
+  {
+    switch (Defines.autonomousFSM)
+    {
+      default:
+      {
+        driveEngine.setZeroPower();
+      }
+      break;
+    }
+  }
 }
