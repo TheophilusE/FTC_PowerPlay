@@ -161,19 +161,26 @@ public abstract class OpModeBase extends CommandOpMode
     }
   }
 
+  /* Sets the number of executions per second. */
   public void setExecutionsPerSecond(double executionsPerSecond)
   {
     this.executionsPerSecond = 1.0 / executionsPerSecond;
   }
 
-  /* Register motors and sensors */
+  /* Register motors and sensors. */
   public void registerAccessors()
   {
   }
 
-  /* Register subsystems */
+  /* Register subsystems. */
   public void registerSubsystems()
   {
+  }
+
+  /* Notifies the engine that stop is requested. */
+  public void requestExit()
+  {
+    requestOpModeStop();
   }
 
   /**

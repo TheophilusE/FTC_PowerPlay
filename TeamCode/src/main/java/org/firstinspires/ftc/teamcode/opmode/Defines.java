@@ -47,6 +47,33 @@ public final class Defines
   /// Drive mode configuration. Publicly accessible variable to access current drive mode config.
   public static DriveMode DRIVE_MODE = DriveMode.ROBOT_CENTRIC_MECANUM;
 
+  /*
+   * Enumeration of all states used used for autonomous logic and processing.
+   *
+   * This is a Finite State Machine (FSM) that can be used to procure dynamic autonomous logic,
+   * where it's behaviour is based on what state the controller is.
+   */
+  public enum AutonomousFSM
+  {
+    /// Idle state in the controller.
+    IDLE,
+
+    /// Indicates that the controller should move to a position.
+    MOVE_TO_POSITION,
+
+    /// Indicates that the controller should align its heading.
+    ALIGN_HEADING,
+
+    /// Indicates that the controller should process logic through its vision subsystem.
+    EVALUATE_VISION
+  }
+
+  /// Specifies if autonomous programs should use their default state or start at a set state.
+  public static boolean FSM_STATE_OVERRIDE = false;
+
+  /// Stores the global autonomous state.
+  public static AutonomousFSM autonomousFSM = AutonomousFSM.IDLE;
+
   /// Enable / Disable Camera Stream to the Dashboard.
   public static boolean ENABLE_CAMERA_STREAM = true;
 
