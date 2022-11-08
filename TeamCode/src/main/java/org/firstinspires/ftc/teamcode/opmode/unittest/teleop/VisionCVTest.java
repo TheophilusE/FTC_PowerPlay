@@ -11,15 +11,19 @@ public class VisionCVTest extends OpModeBase
   @Override
   public void registerSubsystems()
   {
+    super.registerSubsystems();
     addSubsystem(new VisionCVSubsystem(hardwareMap, telemetry));
   }
 
   @Override
   public void update()
   {
-    VisionCVSubsystem visionCVSubsystem = getComponent(VisionCVSubsystem.class);
-    if (visionCVSubsystem == null)
+    // Get and update Vision CV
     {
+      VisionCVSubsystem visionCVSubsystem = getComponent(VisionCVSubsystem.class);
+      if (visionCVSubsystem != null)
+      {
+      }
     }
   }
 }
