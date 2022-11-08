@@ -5,6 +5,7 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
+import org.firstinspires.ftc.teamcode.opmode.Defines;
 import org.firstinspires.ftc.teamcode.vision.VisionCV;
 
 /*
@@ -15,26 +16,14 @@ public class VisionCVSubsystem extends SubsystemBase
   private final VisionCV  visionCV;
   private final Telemetry telemetry;
 
+  private ElapsedTime elapsedTime       = null;
+  private double      targetElapsedTime = 0.0;
+
   public VisionCVSubsystem(final HardwareMap hardwareMap, final Telemetry telemetry)
   {
     visionCV       = new VisionCV(hardwareMap);
     this.telemetry = telemetry;
-  }
-
-  public int runCameraDetection(float timeInSeconds, boolean shutdown)
-  {
-    ElapsedTime time = new ElapsedTime();
-
-    while (time.seconds() < timeInSeconds)
-    {
-      visionCV.update(telemetry);
-    }
-
-    if (shutdown)
-    {
-      return visionCV.shutDown();
-    }
-    return 0;
+    elapsedTime    = new ElapsedTime();
   }
 
   @Override
@@ -43,12 +32,10 @@ public class VisionCVSubsystem extends SubsystemBase
     visionCV.update(telemetry);
   }
 
-  /*
-  public Defines.HubLevel getCurrentHubLevel()
+  public Defines.ParkTargetSignal getTargetSignal()
   {
-    return visionCV.getPipeline().getHubLevel();
+    return visionCV.getPipeline().getTargetSignal();
   }
-   */
 
   public void shutdown()
   {
