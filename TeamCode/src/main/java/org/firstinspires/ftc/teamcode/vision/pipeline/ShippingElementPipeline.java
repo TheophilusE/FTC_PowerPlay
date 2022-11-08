@@ -2,11 +2,13 @@ package org.firstinspires.ftc.teamcode.vision.pipeline;
 
 import com.sun.tools.javac.util.Pair;
 
-import org.checkerframework.checker.units.qual.A;
-import org.firstinspires.ftc.teamcode.math.Vector3f;
-import org.firstinspires.ftc.teamcode.math.Vector4f;
+import org.firstinspires.ftc.teamcode.math.Vector3d;
 import org.firstinspires.ftc.teamcode.opmode.Defines;
-import org.opencv.core.*;
+import org.opencv.core.Core;
+import org.opencv.core.Mat;
+import org.opencv.core.Point;
+import org.opencv.core.Rect;
+import org.opencv.core.Scalar;
 import org.opencv.imgproc.Imgproc;
 import org.openftc.easyopencv.OpenCvPipeline;
 
@@ -24,25 +26,20 @@ public class ShippingElementPipeline extends OpenCvPipeline
   public static int centerMarkerPositionWidth  = 20;
   public static int centerMarkerPositionHeight = 20;
 
-  public static int thresholdValue = 120;
+  public static double minThresholdValue = 10; // Smaller values equal more precision
+  private final Mat    yCrCbMat          = new Mat();
+  private final Mat    cBMat             = new Mat();
 
   // volatile because it's accessed by the opmode thread with no sync
   private volatile Defines.ParkTargetSignal                            targetSignal     = Defines.ParkTargetSignal.SIGNAL_NONE;
-  private          ArrayList<Pair<Defines.ParkTargetSignal, Vector4f>> signalColorPairs = new ArrayList<Pair<Defines.ParkTargetSignal, Vector4f>>(3);
-
-  // Target color during comparison
-  private Vector4f targetColor = new Vector4f(1.0f, 1.0f, 1.0f, 1.0f);
-
-  private final Mat yCrCbMat = new Mat();
-  private final Mat cBMat    = new Mat();
+  private final    ArrayList<Pair<Defines.ParkTargetSignal, Vector3d>> signalColorPairs = new ArrayList<Pair<Defines.ParkTargetSignal, Vector3d>>(3);
 
   public ShippingElementPipeline()
   {
     // Populate signal pairs
-    new Pair<Defines.ParkTargetSignal, Vector4f>(Defines.ParkTargetSignal.SIGNAL_ONE, new Vector4f(0.0f, 0.0f, 0.0f, 1.0f));
-    signalColorPairs.add(new Pair<Defines.ParkTargetSignal, Vector4f>(Defines.ParkTargetSignal.SIGNAL_ONE, new Vector4f(0.0f, 0.0f, 0.0f, 1.0f)));
-    signalColorPairs.add(new Pair<Defines.ParkTargetSignal, Vector4f>(Defines.ParkTargetSignal.SIGNAL_TWO, new Vector4f(0.0f, 0.0f, 0.0f, 1.0f)));
-    signalColorPairs.add(new Pair<Defines.ParkTargetSignal, Vector4f>(Defines.ParkTargetSignal.SIGNAL_THREE, new Vector4f(0.0f, 0.0f, 0.0f, 1.0f)));
+    signalColorPairs.add(new Pair<Defines.ParkTargetSignal, Vector3d>(Defines.ParkTargetSignal.SIGNAL_ONE, new Vector3d(0.0, 0.0, 0.0)));
+    signalColorPairs.add(new Pair<Defines.ParkTargetSignal, Vector3d>(Defines.ParkTargetSignal.SIGNAL_TWO, new Vector3d(0.0, 0.0, 0.0)));
+    signalColorPairs.add(new Pair<Defines.ParkTargetSignal, Vector3d>(Defines.ParkTargetSignal.SIGNAL_THREE, new Vector3d(0.0, 0.0, 0.0)));
   }
 
   @Override
@@ -67,15 +64,35 @@ public class ShippingElementPipeline extends OpenCvPipeline
 
     Scalar centerRegionMean = Core.mean(centerSampleRegion);
 
-    // Detect marker type here
+    // Detect marker type and deduce marker color.
     boolean centerMarkerDetected = false;
+    {
+      Defines.ParkTargetSignal bestDetectedSignal = Defines.ParkTargetSignal.SIGNAL_NONE;
+      Vector3d                 finalColor         = new Vector3d(centerRegionMean.val[0], centerRegionMean.val[1], centerRegionMean.val[2]);
+      double                   detectThreshold    = minThresholdValue;
 
-    // if both are detected
+      for (int i = 0; i < signalColorPairs.size(); ++i)
+      {
+        double squaredDistance = finalColor.distanceSquared(finalColor.sub(signalColorPairs.get(i).snd));
+
+        // Set our new threshold to the current distance, as we are trying to get the closest color.
+        if (squaredDistance < detectThreshold)
+        {
+          bestDetectedSignal = signalColorPairs.get(i).fst;
+          detectThreshold    = squaredDistance;
+        }
+      }
+
+      if (bestDetectedSignal != Defines.ParkTargetSignal.SIGNAL_NONE)
+      {
+        targetSignal         = bestDetectedSignal;
+        centerMarkerDetected = true;
+      }
+    }
+
     if (centerMarkerDetected)
     {
-      // Deduce color
-
-      // Set the appropriate levels respectively
+      // TODO: Add extra logic if marker detected
     }
 
     // Now that we have all the data we need here, we can start putting things on the viewport for debugging
