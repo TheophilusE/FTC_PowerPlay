@@ -69,23 +69,7 @@ public class VisionCV
     telemetry.addData("Overhead time ms", webcam.getOverheadTimeMs());
     telemetry.addData("Theoretical max FPS", webcam.getCurrentPipelineMaxFps());
 
-    // telemetry.addData("Current Hub Level", pipeline.getHubLevel());
-
-    //telemetry.addData("left cb", pipeline.leftRegionCb);
-    //telemetry.addData("center cb", pipeline.centerRegionCb);
-  }
-
-  public double inValues(double value, double min, double max)
-  {
-    if (value < min)
-    {
-      value = min;
-    }
-    if (value > max)
-    {
-      value = max;
-    }
-    return value;
+    telemetry.addData("Current Target Signal", pipeline.getTargetSignal());
   }
 
   public int shutDown()
