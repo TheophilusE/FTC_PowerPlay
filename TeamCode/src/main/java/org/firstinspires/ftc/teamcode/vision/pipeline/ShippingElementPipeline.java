@@ -73,13 +73,17 @@ public class ShippingElementPipeline extends OpenCvPipeline
 
       for (int i = 0; i < signalColorPairs.size(); ++i)
       {
-        double squaredDistance = finalColor.distanceSquared(finalColor.sub(signalColorPairs.get(i).snd));
+        // Get the distance from the current final color to our expected output color.
+        // We could use the Square distance instead to be more efficient but this is done
+        // For the sake of simplicity. If there are any performance degradations, use the
+        // Distance Squared value to avoid the square root.
+        double distance = finalColor.distance(signalColorPairs.get(i).snd);
 
         // Set our new threshold to the current distance, as we are trying to get the closest color.
-        if (squaredDistance < detectThreshold)
+        if (distance < detectThreshold)
         {
           bestDetectedSignal = signalColorPairs.get(i).fst;
-          detectThreshold    = squaredDistance;
+          detectThreshold    = distance;
         }
       }
 
