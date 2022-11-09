@@ -7,6 +7,8 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.teamcode.control.util.Extensions;
+import org.firstinspires.ftc.teamcode.hardware.subsystems.LiftSubsystem;
+import org.firstinspires.ftc.teamcode.math.FastMath;
 import org.firstinspires.ftc.teamcode.opmode.Defines;
 import org.firstinspires.ftc.teamcode.opmode.OpModeBase;
 
@@ -17,13 +19,19 @@ public class ManualDrive extends OpModeBase
   @Override
   public void registerAccessors()
   {
-
+    super.registerAccessors();
   }
 
   @Override
   public void registerSubsystems()
   {
+    super.registerSubsystems();
 
+    {
+      telemetry.addLine("> Register Lift Subsystem...");
+      addSubsystem(new LiftSubsystem(hardwareMap, "liftMotor"));
+      telemetry.update();
+    }
   }
 
   @Override
@@ -241,6 +249,54 @@ public class ManualDrive extends OpModeBase
         } else if (gamepad1.dpad_left)
         {
           Defines.DRIVE_COEFFICIENT = 0.25f / 2.0f;
+        }
+      }
+    }
+
+    // Update lift motor
+    {
+      // TODO (TheophilusE): Allow manual override?
+
+      if (gamepad1.left_bumper)
+      {
+        // First position (smallest position)
+        if (gamepad1.dpad_up)
+        {
+          LiftSubsystem liftSubsystem = getComponent(LiftSubsystem.class);
+          if (liftSubsystem != null)
+          {
+            liftSubsystem.setTargetPosition(1000);
+          }
+        }
+
+        // Second position (middle position)
+        if (gamepad1.dpad_right)
+        {
+          LiftSubsystem liftSubsystem = getComponent(LiftSubsystem.class);
+          if (liftSubsystem != null)
+          {
+            liftSubsystem.setTargetPosition(1000); // TODO: Set actual position
+          }
+        }
+
+        // Third Position (highest position)
+        if (gamepad1.dpad_down)
+        {
+          LiftSubsystem liftSubsystem = getComponent(LiftSubsystem.class);
+          if (liftSubsystem != null)
+          {
+            liftSubsystem.setTargetPosition(2000); // TODO: Set actual position
+          }
+        }
+
+        // Rest Position (zero or start position)
+        if (gamepad1.dpad_left)
+        {
+          LiftSubsystem liftSubsystem = getComponent(LiftSubsystem.class);
+          if (liftSubsystem != null)
+          {
+            liftSubsystem.setTargetPosition(3000); // TODO: Set actual position
+          }
         }
       }
     }

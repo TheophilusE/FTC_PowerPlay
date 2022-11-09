@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode.hardware.subsystems;
 
+import com.acmerobotics.dashboard.config.Config;
 import com.arcrobotics.ftclib.command.SubsystemBase;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
@@ -7,8 +8,7 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 
 import org.firstinspires.ftc.teamcode.control.algorithm.PIDControl;
 
-// import static org.firstinspires.ftc.teamcode.control.util.Defines.LIFT_MOTOR_NAME;
-
+@Config
 public class LiftSubsystem extends SubsystemBase
 {
   // Motors
@@ -20,7 +20,8 @@ public class LiftSubsystem extends SubsystemBase
   // Control Data
   private double currentPosition;
   private double targetPosition;
-  private double liftCoefficient;
+
+  public static double LIFT_COEFFICIENT = 1.0;
 
   // Construct
   public LiftSubsystem(final HardwareMap hardwareMap, final String name)
@@ -29,7 +30,6 @@ public class LiftSubsystem extends SubsystemBase
     liftMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
     liftMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-    liftCoefficient = 1.0;
 
     // Initialize controller
     liftPIDControl = new PIDControl(0.5, 0.3, 0.2);
@@ -40,14 +40,25 @@ public class LiftSubsystem extends SubsystemBase
 
     // Set up parameters for lifting platform motor
     liftPIDControl.setSetpoint(0);
-    liftPIDControl.setOutputRange(0, liftCoefficient);
-    liftPIDControl.setInputRange(-90, 90);
+    liftPIDControl.setOutputRange(0, 1.0);
+    liftPIDControl.setInputRange(0, 10000);
     liftPIDControl.enable();
   }
 
-  public double getTargetPositionError()
+  @Override
+  public void periodic()
   {
-    return targetPosition - currentPosition;
+    if (liftPIDControl.getSetpoint() != targetPosition)
+    {
+      liftPIDControl.setSetpoint(targetPosition);
+    }
+
+    currentPosition = liftMotor.getCurrentPosition();
+
+    // Set the current position that will be used to calculate the error
+    // and generate our final output power.
+    double motorPower = liftPIDControl.performPID(currentPosition);
+    liftMotor.setPower(motorPower);
   }
 
   public double getTargetPosition()
@@ -66,16 +77,6 @@ public class LiftSubsystem extends SubsystemBase
     return currentPosition;
   }
 
-  public double getLiftCoefficient()
-  {
-    return liftCoefficient;
-  }
-
-  public void setLiftCoefficient(double coefficient)
-  {
-    liftCoefficient = coefficient;
-  }
-
   public double getMotorPower()
   {
     return liftMotor.getPower();
@@ -84,5 +85,10 @@ public class LiftSubsystem extends SubsystemBase
   public void setMotorPower(double power)
   {
     liftMotor.setPower(power);
+  }
+
+  public DcMotorEx getLiftMotor()
+  {
+    return liftMotor;
   }
 }
