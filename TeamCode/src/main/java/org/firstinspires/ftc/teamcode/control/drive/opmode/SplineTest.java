@@ -6,18 +6,18 @@ import com.acmerobotics.roadrunner.trajectory.Trajectory;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
-import org.firstinspires.ftc.teamcode.control.drive.SampleMecanumDrive;
+import org.firstinspires.ftc.teamcode.control.derived.DriveEngine;
 
 /*
  * This is an example of a more complex path to really test the tuning.
  */
-@Autonomous(group = "drive")
+@Autonomous(name = "Spline Test", group = "DriveTuner")
 public class SplineTest extends LinearOpMode
 {
   @Override
   public void runOpMode() throws InterruptedException
   {
-    SampleMecanumDrive drive = new SampleMecanumDrive(hardwareMap);
+    DriveEngine drive = new DriveEngine(hardwareMap);
 
     waitForStart();
 

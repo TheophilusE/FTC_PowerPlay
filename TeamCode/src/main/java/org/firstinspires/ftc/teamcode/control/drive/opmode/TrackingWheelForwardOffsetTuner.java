@@ -6,12 +6,13 @@ import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
 import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.acmerobotics.roadrunner.util.Angle;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.util.MovingStatistics;
 import com.qualcomm.robotcore.util.RobotLog;
 
 import org.firstinspires.ftc.robotcore.internal.system.Misc;
-import org.firstinspires.ftc.teamcode.control.drive.SampleMecanumDrive;
+import org.firstinspires.ftc.teamcode.control.derived.DriveEngine;
 import org.firstinspires.ftc.teamcode.control.drive.StandardTrackingWheelLocalizer;
 
 /**
@@ -34,7 +35,8 @@ import org.firstinspires.ftc.teamcode.control.drive.StandardTrackingWheelLocaliz
  * satisfactory result is produced.
  */
 @Config
-@Autonomous(group = "drive")
+@Disabled // Comment out to enable
+@Autonomous(name = "Tracking Wheel Forward Offset Tuner", group = "DriveTuner")
 public class TrackingWheelForwardOffsetTuner extends LinearOpMode
 {
   public static double ANGLE      = 180; // deg
@@ -46,7 +48,7 @@ public class TrackingWheelForwardOffsetTuner extends LinearOpMode
   {
     telemetry = new MultipleTelemetry(telemetry, FtcDashboard.getInstance().getTelemetry());
 
-    SampleMecanumDrive drive = new SampleMecanumDrive(hardwareMap);
+    DriveEngine drive = new DriveEngine(hardwareMap);
 
     if (!(drive.getLocalizer() instanceof StandardTrackingWheelLocalizer))
     {

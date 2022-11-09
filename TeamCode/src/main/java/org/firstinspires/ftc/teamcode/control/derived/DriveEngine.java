@@ -52,7 +52,8 @@ import java.util.Arrays;
 import java.util.List;
 
 /*
- * Simple mecanum drive hardware implementation for REV hardware.
+ * This file contains a sample base for all subsequent drive classes using the Mecanum Drive.
+ * Initialized February 19, 2021. 5:40 PM.
  */
 @Config
 public class DriveEngine extends MecanumDrive

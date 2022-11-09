@@ -10,8 +10,8 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.util.MovingStatistics;
 
 import org.firstinspires.ftc.robotcore.internal.system.Misc;
+import org.firstinspires.ftc.teamcode.control.derived.DriveEngine;
 import org.firstinspires.ftc.teamcode.control.drive.DriveConstants;
-import org.firstinspires.ftc.teamcode.control.drive.SampleMecanumDrive;
 
 /*
  * This routine determines the effective track width. The procedure works by executing a point turn
@@ -23,7 +23,7 @@ import org.firstinspires.ftc.teamcode.control.drive.SampleMecanumDrive;
  * accurate track width estimate is important or else the angular constraints will be thrown off.
  */
 @Config
-@Autonomous(group = "drive")
+@Autonomous(name = "Track Width Tuner", group = "DriveTuner")
 public class TrackWidthTuner extends LinearOpMode
 {
   public static double ANGLE      = 180; // deg
@@ -35,7 +35,7 @@ public class TrackWidthTuner extends LinearOpMode
   {
     telemetry = new MultipleTelemetry(telemetry, FtcDashboard.getInstance().getTelemetry());
 
-    SampleMecanumDrive drive = new SampleMecanumDrive(hardwareMap);
+    DriveEngine drive = new DriveEngine(hardwareMap);
     // TODO: if you haven't already, set the localizer to something that doesn't depend on
     // drive encoders for computing the heading
 

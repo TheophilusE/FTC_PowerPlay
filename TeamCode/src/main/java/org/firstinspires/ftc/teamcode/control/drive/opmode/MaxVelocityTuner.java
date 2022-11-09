@@ -10,8 +10,8 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.VoltageSensor;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
+import org.firstinspires.ftc.teamcode.control.derived.DriveEngine;
 import org.firstinspires.ftc.teamcode.control.drive.DriveConstants;
-import org.firstinspires.ftc.teamcode.control.drive.SampleMecanumDrive;
 
 import java.util.Objects;
 
@@ -24,7 +24,7 @@ import java.util.Objects;
  * Further fine tuning of kF may be desired.
  */
 @Config
-@Autonomous(group = "drive")
+@Autonomous(name = "Max Velocity Tuner", group = "DriveTuner")
 public class MaxVelocityTuner extends LinearOpMode
 {
   public static double RUNTIME = 2.0;
@@ -37,7 +37,7 @@ public class MaxVelocityTuner extends LinearOpMode
   @Override
   public void runOpMode() throws InterruptedException
   {
-    SampleMecanumDrive drive = new SampleMecanumDrive(hardwareMap);
+    DriveEngine drive = new DriveEngine(hardwareMap);
 
     drive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 

@@ -3,11 +3,12 @@ package org.firstinspires.ftc.teamcode.control.drive.opmode;
 import com.acmerobotics.dashboard.config.Config;
 import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.acmerobotics.roadrunner.util.Angle;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.util.RobotLog;
 
-import org.firstinspires.ftc.teamcode.control.drive.SampleMecanumDrive;
+import org.firstinspires.ftc.teamcode.control.derived.DriveEngine;
 import org.firstinspires.ftc.teamcode.control.drive.StandardTrackingWheelLocalizer;
 
 /**
@@ -62,7 +63,8 @@ import org.firstinspires.ftc.teamcode.control.drive.StandardTrackingWheelLocaliz
  * precision. The heading should still line up.
  */
 @Config
-@TeleOp(group = "drive")
+@Disabled // Comment out to enable
+@TeleOp(name = "Traking Wheel Lateral Distance Tuner", group = "DriveTuner")
 public class TrackingWheelLateralDistanceTuner extends LinearOpMode
 {
   public static int NUM_TURNS = 10;
@@ -70,7 +72,7 @@ public class TrackingWheelLateralDistanceTuner extends LinearOpMode
   @Override
   public void runOpMode() throws InterruptedException
   {
-    SampleMecanumDrive drive = new SampleMecanumDrive(hardwareMap);
+    DriveEngine drive = new DriveEngine(hardwareMap);
 
     if (!(drive.getLocalizer() instanceof StandardTrackingWheelLocalizer))
     {

@@ -131,6 +131,8 @@ public abstract class OpModeBase extends CommandOpMode
   {
     super.run();
 
+    driveEngine.update();
+
     update();
 
     // Temporarily halt updates until total execution time is reached
