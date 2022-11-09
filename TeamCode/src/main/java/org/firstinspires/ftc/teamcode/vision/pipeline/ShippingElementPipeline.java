@@ -37,9 +37,9 @@ public class ShippingElementPipeline extends OpenCvPipeline
   public ShippingElementPipeline()
   {
     // Populate signal pairs
-    signalColorPairs.add(new Pair<Defines.ParkTargetSignal, Vector3d>(Defines.ParkTargetSignal.SIGNAL_ONE, new Vector3d(0.0, 0.0, 0.0)));
-    signalColorPairs.add(new Pair<Defines.ParkTargetSignal, Vector3d>(Defines.ParkTargetSignal.SIGNAL_TWO, new Vector3d(0.0, 0.0, 0.0)));
-    signalColorPairs.add(new Pair<Defines.ParkTargetSignal, Vector3d>(Defines.ParkTargetSignal.SIGNAL_THREE, new Vector3d(0.0, 0.0, 0.0)));
+    signalColorPairs.add(new Pair<Defines.ParkTargetSignal, Vector3d>(Defines.ParkTargetSignal.SIGNAL_ONE, new Vector3d(255.0, 0.0, 0.0)));
+    signalColorPairs.add(new Pair<Defines.ParkTargetSignal, Vector3d>(Defines.ParkTargetSignal.SIGNAL_TWO, new Vector3d(0.0, 255.0, 0.0)));
+    signalColorPairs.add(new Pair<Defines.ParkTargetSignal, Vector3d>(Defines.ParkTargetSignal.SIGNAL_THREE, new Vector3d(0.0, 0.0, 255.0)));
   }
 
   @Override
