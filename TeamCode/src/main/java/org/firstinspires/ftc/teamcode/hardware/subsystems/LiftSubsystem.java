@@ -36,8 +36,8 @@ public class LiftSubsystem extends SubsystemBase
 
   private ArrayList<Pair<LiftLevel, Integer>> liftLevelPairs = new ArrayList<Pair<LiftLevel, Integer>>(4);
 
-  public static double LIFT_COEFFICIENT = 1.0;
-  public static boolean enableTracking = false;
+  public static double  LIFT_COEFFICIENT = 1.0;
+  public static boolean enableTracking   = false;
 
   // Construct
   public LiftSubsystem(final HardwareMap hardwareMap, final String motorName, final String sensorName)
@@ -69,8 +69,11 @@ public class LiftSubsystem extends SubsystemBase
   @Override
   public void periodic()
   {
+    // Early exit if tracking is disabled or set to false
     if (!enableTracking)
+    {
       return;
+    }
 
     if (liftPIDControl.getSetpoint() != targetPosition)
     {

@@ -26,6 +26,7 @@ public class ManualDrive extends OpModeBase
   {
     super.registerSubsystems();
 
+    // Register Lift Subsystem
     {
       telemetry.addLine("> Register Lift Subsystem...");
 
@@ -256,73 +257,65 @@ public class ManualDrive extends OpModeBase
       }
     }
 
+    // Update Lift Subsystem
     {
       LiftSubsystem liftSubsystem = getComponent(LiftSubsystem.class);
       if (liftSubsystem != null)
       {
         liftSubsystem.setTargetPosition(LiftSubsystem.LiftLevel.ZERO_LEVEL);
 
-        if (gamepad1.left_trigger > 0)
-        {
-          liftSubsystem.getLiftMotor().setPower(-gamepad1.left_trigger);
-        } else if (gamepad1.right_trigger > 0)
-        {
-          liftSubsystem.getLiftMotor().setPower(gamepad1.right_stick_x);
-        }
-
-        if (gamepad1.left_trigger == 0 && gamepad1.right_trigger == 0)
-        {
-          liftSubsystem.getLiftMotor().setPower(0);
-        }
+        // This is a less hacky method as it only applies power as the difference
+        // between the up and down vectors.
+        // If the right trigger is greater than the left trigger, it'll go up. (Ex. 1 - 0 = 1)
+        // If the left trigger is greater than the right trigger, it'll go down. (Ex. 0 - 1 = -1)
+        // If they are the same, it will apply zero power (Ex. 1 - 1 = 0 or 0 - 0 = 0)
+        double difference = gamepad1.right_trigger - gamepad1.left_trigger;
+        liftSubsystem.getLiftMotor().setPower(difference);
       }
     }
 
-    // Update lift motor
+    // Update Lift Subsystem
+    if (false) // Disabled for now
     {
-      // TODO: Allow manual override?
+      // Rest Position (zero or start position)
+      if (gamepad1.x)
+      {
+        LiftSubsystem liftSubsystem = getComponent(LiftSubsystem.class);
+        if (liftSubsystem != null)
+        {
+          liftSubsystem.setTargetPosition(LiftSubsystem.LiftLevel.THREE_LEVEL);
+        }
+      }
 
-      // if (gamepad1.left_bumper)
-      // {
-      //   // First position (smallest position)
-      //   if (gamepad1.dpad_up)
-      //   {
-      //     LiftSubsystem liftSubsystem = getComponent(LiftSubsystem.class);
-      //     if (liftSubsystem != null)
-      //     {
-      //       liftSubsystem.setTargetPosition(LiftSubsystem.LiftLevel.ZERO_LEVEL);
-      //     }
-      //   }
-//
-      //   // Second position (middle position)
-      //   if (gamepad1.dpad_right)
-      //   {
-      //     LiftSubsystem liftSubsystem = getComponent(LiftSubsystem.class);
-      //     if (liftSubsystem != null)
-      //     {
-      //       liftSubsystem.setTargetPosition(LiftSubsystem.LiftLevel.ONE_LEVEL);
-      //     }
-      //   }
-//
-      //   // Third Position (highest position)
-      //   if (gamepad1.dpad_down)
-      //   {
-      //     LiftSubsystem liftSubsystem = getComponent(LiftSubsystem.class);
-      //     if (liftSubsystem != null)
-      //     {
-      //       liftSubsystem.setTargetPosition(LiftSubsystem.LiftLevel.TWO_LEVEL);
-      //     }
-      //   }
-//
-      //   // Rest Position (zero or start position)
-      //   if (gamepad1.dpad_left)
-      //   {
-      //     LiftSubsystem liftSubsystem = getComponent(LiftSubsystem.class);
-      //     if (liftSubsystem != null)
-      //     {
-      //       liftSubsystem.setTargetPosition(LiftSubsystem.LiftLevel.THREE_LEVEL);
-      //     }
-      //   }
-      // }
+      // First position (smallest position)
+      if (gamepad1.a)
+      {
+        LiftSubsystem liftSubsystem = getComponent(LiftSubsystem.class);
+        if (liftSubsystem != null)
+        {
+          liftSubsystem.setTargetPosition(LiftSubsystem.LiftLevel.ZERO_LEVEL);
+        }
+      }
+
+      // Second position (middle position)
+      if (gamepad1.b)
+      {
+        LiftSubsystem liftSubsystem = getComponent(LiftSubsystem.class);
+        if (liftSubsystem != null)
+        {
+          liftSubsystem.setTargetPosition(LiftSubsystem.LiftLevel.ONE_LEVEL);
+        }
+      }
+
+      // Third Position (highest position)
+      if (gamepad1.y)
+      {
+        LiftSubsystem liftSubsystem = getComponent(LiftSubsystem.class);
+        if (liftSubsystem != null)
+        {
+          liftSubsystem.setTargetPosition(LiftSubsystem.LiftLevel.TWO_LEVEL);
+        }
+      }
     }
   }
 }
