@@ -11,6 +11,10 @@ import org.firstinspires.ftc.teamcode.hardware.subsystems.LiftSubsystem;
 import org.firstinspires.ftc.teamcode.opmode.Defines;
 import org.firstinspires.ftc.teamcode.opmode.OpModeBase;
 
+/*
+ * This class houses the main TeleOp program that enables full functionality.
+ */
+
 @Config
 @TeleOp(name = "ManualDrive", group = "TeleOp")
 public class ManualDrive extends OpModeBase

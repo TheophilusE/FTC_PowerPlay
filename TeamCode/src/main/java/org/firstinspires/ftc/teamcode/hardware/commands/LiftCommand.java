@@ -11,6 +11,7 @@ public class LiftCommand extends ParallelCommandGroup
   public LiftCommand(LiftSubsystem subsystem)
   {
     liftSubsystem = subsystem;
+    addRequirements(subsystem);
   }
 
   @Override

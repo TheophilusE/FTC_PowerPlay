@@ -18,11 +18,11 @@ public final class Defines
 
   /// Define to specify which side the robot starts from. Useful for implementing logic that is
   /// Dependent on the side of the robot.
-  public static boolean BLUE_SIDE = false;
+  public static boolean BLUE_ALLIANCE = true;
 
-  /// Start Pose. This defines the robot's initial heading and location.
-  public static Pose2d START_POSE = new Pose2d(6, BLUE_SIDE ? 63 : -63,
-                                               Math.toRadians(BLUE_SIDE ? -90 : 90));
+  /// Start Position. This defines the robot's initial heading and location.
+  public static Pose2d START_POSE = new Pose2d(6, BLUE_ALLIANCE ? 63 : -63,
+                                               Math.toRadians(BLUE_ALLIANCE ? -90 : 90));
 
   /// Drive Coefficient. This defines the scale factor [0.0, 1.0] of which to scale the drive
   /// Output Power.

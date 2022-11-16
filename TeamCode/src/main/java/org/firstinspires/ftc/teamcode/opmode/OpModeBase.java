@@ -95,7 +95,7 @@ public abstract class OpModeBase extends CommandOpMode
   @Override
   public void waitForStart()
   {
-    // Do not call default constructor!
+    // Do not call default waitForStart!
     // It puts the thread of execution to sleep, until Start is pressed, or the thread terminates.
 
     switch (Defines.DRIVE_MODE)
