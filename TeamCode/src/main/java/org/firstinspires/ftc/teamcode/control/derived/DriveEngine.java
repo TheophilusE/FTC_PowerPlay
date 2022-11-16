@@ -45,6 +45,8 @@ import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
 import org.firstinspires.ftc.teamcode.control.trajectorysequence.TrajectorySequence;
 import org.firstinspires.ftc.teamcode.control.trajectorysequence.TrajectorySequenceBuilder;
 import org.firstinspires.ftc.teamcode.control.trajectorysequence.TrajectorySequenceRunner;
+import org.firstinspires.ftc.teamcode.control.util.AxisDirection;
+import org.firstinspires.ftc.teamcode.control.util.BNO055IMUUtil;
 import org.firstinspires.ftc.teamcode.control.util.LynxModuleUtil;
 
 import java.util.ArrayList;
@@ -123,6 +125,9 @@ public class DriveEngine extends MecanumDrive
     //
     // For example, if +Y in this diagram faces downwards, you would use AxisDirection.NEG_Y.
     // BNO055IMUUtil.remapZAxis(imu, AxisDirection.NEG_Y);
+
+    // The Hub Logo currently faces leftwards, +x is downwards
+    BNO055IMUUtil.remapZAxis(imu, AxisDirection.NEG_X);
 
     leftFront  = hardwareMap.get(DcMotorEx.class, "leftFront");
     leftRear   = hardwareMap.get(DcMotorEx.class, "leftRear");

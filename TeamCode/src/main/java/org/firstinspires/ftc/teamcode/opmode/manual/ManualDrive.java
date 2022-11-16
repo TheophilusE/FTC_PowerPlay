@@ -28,7 +28,11 @@ public class ManualDrive extends OpModeBase
 
     {
       telemetry.addLine("> Register Lift Subsystem...");
-      addSubsystem(new LiftSubsystem(hardwareMap, "liftMotor"));
+
+      LiftSubsystem liftSubsystem = new LiftSubsystem(hardwareMap, "liftMotor", "colorDistanceSensor");
+      liftSubsystem.enableTracking = false;
+      addSubsystem(liftSubsystem);
+
       telemetry.update();
     }
   }
@@ -252,52 +256,73 @@ public class ManualDrive extends OpModeBase
       }
     }
 
-    // Update lift motor
     {
-      // TODO (TheophilusE): Allow manual override?
-
-      if (gamepad1.left_bumper)
+      LiftSubsystem liftSubsystem = getComponent(LiftSubsystem.class);
+      if (liftSubsystem != null)
       {
-        // First position (smallest position)
-        if (gamepad1.dpad_up)
+        liftSubsystem.setTargetPosition(LiftSubsystem.LiftLevel.ZERO_LEVEL);
+
+        if (gamepad1.left_trigger > 0)
         {
-          LiftSubsystem liftSubsystem = getComponent(LiftSubsystem.class);
-          if (liftSubsystem != null)
-          {
-            liftSubsystem.setTargetPosition(1000);
-          }
+          liftSubsystem.getLiftMotor().setPower(-gamepad1.left_trigger);
+        } else if (gamepad1.right_trigger > 0)
+        {
+          liftSubsystem.getLiftMotor().setPower(gamepad1.right_stick_x);
         }
 
-        // Second position (middle position)
-        if (gamepad1.dpad_right)
+        if (gamepad1.left_trigger == 0 && gamepad1.right_trigger == 0)
         {
-          LiftSubsystem liftSubsystem = getComponent(LiftSubsystem.class);
-          if (liftSubsystem != null)
-          {
-            liftSubsystem.setTargetPosition(1000); // TODO: Set actual position
-          }
-        }
-
-        // Third Position (highest position)
-        if (gamepad1.dpad_down)
-        {
-          LiftSubsystem liftSubsystem = getComponent(LiftSubsystem.class);
-          if (liftSubsystem != null)
-          {
-            liftSubsystem.setTargetPosition(2000); // TODO: Set actual position
-          }
-        }
-
-        // Rest Position (zero or start position)
-        if (gamepad1.dpad_left)
-        {
-          LiftSubsystem liftSubsystem = getComponent(LiftSubsystem.class);
-          if (liftSubsystem != null)
-          {
-            liftSubsystem.setTargetPosition(3000); // TODO: Set actual position
-          }
+          liftSubsystem.getLiftMotor().setPower(0);
         }
       }
+    }
+
+    // Update lift motor
+    {
+      // TODO: Allow manual override?
+
+      // if (gamepad1.left_bumper)
+      // {
+      //   // First position (smallest position)
+      //   if (gamepad1.dpad_up)
+      //   {
+      //     LiftSubsystem liftSubsystem = getComponent(LiftSubsystem.class);
+      //     if (liftSubsystem != null)
+      //     {
+      //       liftSubsystem.setTargetPosition(LiftSubsystem.LiftLevel.ZERO_LEVEL);
+      //     }
+      //   }
+//
+      //   // Second position (middle position)
+      //   if (gamepad1.dpad_right)
+      //   {
+      //     LiftSubsystem liftSubsystem = getComponent(LiftSubsystem.class);
+      //     if (liftSubsystem != null)
+      //     {
+      //       liftSubsystem.setTargetPosition(LiftSubsystem.LiftLevel.ONE_LEVEL);
+      //     }
+      //   }
+//
+      //   // Third Position (highest position)
+      //   if (gamepad1.dpad_down)
+      //   {
+      //     LiftSubsystem liftSubsystem = getComponent(LiftSubsystem.class);
+      //     if (liftSubsystem != null)
+      //     {
+      //       liftSubsystem.setTargetPosition(LiftSubsystem.LiftLevel.TWO_LEVEL);
+      //     }
+      //   }
+//
+      //   // Rest Position (zero or start position)
+      //   if (gamepad1.dpad_left)
+      //   {
+      //     LiftSubsystem liftSubsystem = getComponent(LiftSubsystem.class);
+      //     if (liftSubsystem != null)
+      //     {
+      //       liftSubsystem.setTargetPosition(LiftSubsystem.LiftLevel.THREE_LEVEL);
+      //     }
+      //   }
+      // }
     }
   }
 }
