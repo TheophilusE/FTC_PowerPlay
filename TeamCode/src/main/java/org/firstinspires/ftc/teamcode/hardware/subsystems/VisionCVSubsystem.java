@@ -16,14 +16,10 @@ public class VisionCVSubsystem extends SubsystemBase
   private final VisionCV  visionCV;
   private final Telemetry telemetry;
 
-  private ElapsedTime elapsedTime       = null;
-  private double      targetElapsedTime = 0.0;
-
   public VisionCVSubsystem(final HardwareMap hardwareMap, final Telemetry telemetry)
   {
     visionCV       = new VisionCV(hardwareMap);
     this.telemetry = telemetry;
-    elapsedTime    = new ElapsedTime();
   }
 
   @Override
@@ -37,8 +33,8 @@ public class VisionCVSubsystem extends SubsystemBase
     return visionCV.getPipeline().getTargetSignal();
   }
 
-  public void shutdown()
+  public VisionCV getVisionCV()
   {
-    visionCV.shutDown();
+    return visionCV;
   }
 }
