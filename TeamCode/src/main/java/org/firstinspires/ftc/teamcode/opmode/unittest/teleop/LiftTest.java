@@ -2,9 +2,6 @@ package org.firstinspires.ftc.teamcode.opmode.unittest.teleop;
 
 import com.acmerobotics.dashboard.config.Config;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
-import com.qualcomm.robotcore.hardware.ColorSensor;
-import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.DistanceSensor;
 
 import org.firstinspires.ftc.teamcode.hardware.subsystems.LiftSubsystem;
 import org.firstinspires.ftc.teamcode.opmode.OpModeBase;
@@ -13,19 +10,49 @@ import org.firstinspires.ftc.teamcode.opmode.OpModeBase;
 @TeleOp(name = "Lift Test", group = "TeleOpUnitTest")
 public class LiftTest extends OpModeBase
 {
-  public static AutoState state = AutoState.ONE_LEVEL;
+  public static AutoState state            = AutoState.ONE_LEVEL;
+  public        int       currentLiftLevel = 0;
 
   @Override
   public void initialize()
   {
     super.initialize();
 
-    addSubsystem(new LiftSubsystem(hardwareMap, "liftMotor", "colorDistanceSensor"));
+    // Register Lift Subsystem
+    {
+      telemetry.addLine("> Register Lift Subsystem...");
+
+      LiftSubsystem liftSubsystem = new LiftSubsystem(hardwareMap, "liftMotor", "colorDistanceSensor");
+      liftSubsystem.enableTracking = true;
+      addSubsystem(liftSubsystem);
+
+      telemetry.update();
+    }
   }
 
   @Override
   public void update()
   {
+    if (gamepad1.y)
+    {
+      state = AutoState.THREE_LEVEL;
+    }
+
+    if (gamepad1.b)
+    {
+      state = AutoState.TWO_LEVEL;
+    }
+
+    if (gamepad1.a)
+    {
+      state = AutoState.ONE_LEVEL;
+    }
+
+    if (gamepad1.x)
+    {
+      state = AutoState.ZERO_LEVEL;
+    }
+
     switch (state)
     {
       case ZERO_LEVEL:
