@@ -26,7 +26,7 @@ public final class Defines
 
   /// Drive Coefficient. This defines the scale factor [0.0, 1.0] of which to scale the drive
   /// Output Power.
-  public static float DRIVE_COEFFICIENT = 0.5f;
+  public static float DRIVE_COEFFICIENT = 1.0f;
 
   /*
    * Enumeration of all supported drive modes. This defines the way the robot is handled.
