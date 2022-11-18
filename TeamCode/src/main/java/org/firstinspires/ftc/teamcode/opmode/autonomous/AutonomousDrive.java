@@ -1,9 +1,12 @@
 package org.firstinspires.ftc.teamcode.opmode.autonomous;
 
 import com.acmerobotics.dashboard.config.Config;
+import com.arcrobotics.ftclib.command.SequentialCommandGroup;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
+import org.firstinspires.ftc.teamcode.control.trajectorysequence.TrajectorySequence;
+import org.firstinspires.ftc.teamcode.hardware.commands.FollowTrajectorySequenceCommand;
 import org.firstinspires.ftc.teamcode.hardware.subsystems.LiftSubsystem;
 import org.firstinspires.ftc.teamcode.hardware.subsystems.VisionCVSubsystem;
 import org.firstinspires.ftc.teamcode.opmode.Defines;
@@ -79,8 +82,8 @@ public class AutonomousDrive extends OpModeBase
     {
       case IDLE:
       {
-        // Evaluate Vision state
-        if (idleElapsedTime.seconds() > maxIdleTime)
+        // Evaluate Vision state after the max idle time or we have found a suitable target signal
+        if (idleElapsedTime.seconds() > maxIdleTime || getVisionState() != Defines.ParkTargetSignal.SIGNAL_NONE)
         {
           Defines.autonomousFSM = Defines.AutonomousFSM.EVALUATE_VISION;
           return;
@@ -94,36 +97,8 @@ public class AutonomousDrive extends OpModeBase
       case EVALUATE_VISION:
       {
         /// Build trajectory and schedule the command
-
         Defines.ParkTargetSignal signalState = getVisionState();
-        switch (signalState)
-        {
-          case SIGNAL_NONE:
-          {
-          }
-          break;
-
-          case SIGNAL_ONE:
-          {
-          }
-          break;
-
-          case SIGNAL_TWO:
-          {
-          }
-          break;
-
-          case SIGNAL_THREE:
-          {
-          }
-          break;
-        }
-      }
-      break;
-
-      default:
-      {
-        driveEngine.setZeroPower();
+        scheduleAutonomousTrajectory(signalState);
       }
       break;
     }
@@ -140,5 +115,91 @@ public class AutonomousDrive extends OpModeBase
     }
 
     return result;
+  }
+
+  public void scheduleAutonomousTrajectory(Defines.ParkTargetSignal parkTargetSignal)
+  {
+    switch (parkTargetSignal)
+    {
+      case SIGNAL_NONE:
+      {
+        TrajectorySequence defaultPark = null;
+
+        // Build park trajectory
+        if (Defines.BLUE_ALLIANCE)
+        {
+          // A simple strafe to the right will do
+          defaultPark = driveEngine.trajectorySequenceBuilder(driveEngine.getPoseEstimate())
+              .strafeRight(24 * 4)
+              .build();
+
+        } else
+        {
+          // A simple strafe to the left will do
+          defaultPark = driveEngine.trajectorySequenceBuilder(driveEngine.getPoseEstimate())
+              .strafeLeft(24 * 4)
+              .build();
+        }
+
+        // Schedule command
+        schedule(new SequentialCommandGroup(
+            new FollowTrajectorySequenceCommand(driveEngine, defaultPark)
+        ));
+      }
+      break;
+
+      case SIGNAL_ONE:
+      {
+        TrajectorySequence defaultPark = null;
+
+        // Build park trajectory, this is Alliance agnostic
+        // The zone is always to the left of the robot
+        defaultPark = driveEngine.trajectorySequenceBuilder(driveEngine.getPoseEstimate())
+            .strafeLeft(24 * 2)
+            .forward(24 * 4)
+            .build();
+
+        // Schedule command
+        schedule(new SequentialCommandGroup(
+            new FollowTrajectorySequenceCommand(driveEngine, defaultPark)
+        ));
+      }
+      break;
+
+      case SIGNAL_TWO:
+      {
+        TrajectorySequence defaultPark = null;
+
+        // Build park trajectory, this is Alliance agnostic
+        // A simple strafe forwards will do, the zone is always in front of the robot
+        defaultPark = driveEngine.trajectorySequenceBuilder(driveEngine.getPoseEstimate())
+            .forward(24 * 4)
+            .build();
+
+        // Schedule command
+        schedule(new SequentialCommandGroup(
+            new FollowTrajectorySequenceCommand(driveEngine, defaultPark)
+        ));
+      }
+      break;
+
+      case SIGNAL_THREE:
+      {
+        TrajectorySequence defaultPark = null;
+
+        // Build park trajectory, this is Alliance agnostic
+        // The zone is always to the right of the robot
+        defaultPark = driveEngine.trajectorySequenceBuilder(driveEngine.getPoseEstimate())
+            .strafeRight(24 * 2)
+            .forward(24 * 4)
+            .build();
+
+        // Schedule command
+        schedule(new SequentialCommandGroup(
+            new FollowTrajectorySequenceCommand(driveEngine, defaultPark)
+        ));
+      }
+      break;
+    }
   }
 }

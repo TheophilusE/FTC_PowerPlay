@@ -26,6 +26,10 @@ public class FollowTrajectorySequenceCommand extends CommandBase
   @Override
   public void initialize()
   {
+    if (trajectorySequence == null)
+    {
+      return;
+    }
     engine.followTrajectorySequenceAsync(trajectorySequence);
   }
 
@@ -40,6 +44,6 @@ public class FollowTrajectorySequenceCommand extends CommandBase
   @Override
   public boolean isFinished()
   {
-    return !engine.isBusy();
+    return !engine.isBusy() || trajectorySequence == null;
   }
 }
