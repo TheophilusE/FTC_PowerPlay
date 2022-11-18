@@ -27,7 +27,9 @@ public class AutoPark extends OpModeBase
     }
     
     goToParkZone = driveEngine.trajectorySequenceBuilder(driveEngine.getPoseEstimate())
-        .strafeRight(48)
+        .forward(50)
+        .turn(3)
+        .forward(40)
         .build();
 
     schedule(new SequentialCommandGroup(
@@ -39,7 +41,7 @@ public class AutoPark extends OpModeBase
   public void update()
   {
     // Update Finite State Machine
-    updateFSM();
+    //updateFSM();
   }
 
   public void updateFSM()
