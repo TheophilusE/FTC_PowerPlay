@@ -22,8 +22,8 @@ public class DriveConstants
    * These are motor constants that should be listed online for your motors.
    * We use Tetrix Motors, check under the Tetrix Motor Specifications.
    */
-  public static final double TICKS_PER_REV = 100;
-  public static final double MAX_RPM       = 1440;
+  public static final double TICKS_PER_REV = 480.0 ;
+  public static final double MAX_RPM       = 300.0;
 
   /*
    * Set RUN_USING_ENCODER to true to enable built-in hub velocity control using drive encoders.
