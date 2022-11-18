@@ -2,14 +2,13 @@ package org.firstinspires.ftc.teamcode.hardware.subsystems;
 
 import com.acmerobotics.dashboard.config.Config;
 import com.arcrobotics.ftclib.command.SubsystemBase;
-import com.qualcomm.robotcore.hardware.DcMotorSimple;
+import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DistanceSensor;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.sun.tools.javac.util.Pair;
 
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 import org.firstinspires.ftc.teamcode.control.algorithm.PIDControl;
-import org.firstinspires.ftc.teamcode.math.FastMath;
 
 import java.util.ArrayList;
 
@@ -25,7 +24,7 @@ public class LiftSubsystem extends SubsystemBase
   }
 
   // Motors
-  private final DcMotorSimple  liftMotor;
+  private final CRServo        liftMotor;
   private final DistanceSensor distanceSensor;
 
   // Control System
@@ -44,7 +43,7 @@ public class LiftSubsystem extends SubsystemBase
   public LiftSubsystem(final HardwareMap hardwareMap, final String motorName, final String sensorName)
   {
     // Retrieve accessors hardware
-    liftMotor      = hardwareMap.get(DcMotorSimple.class, motorName);
+    liftMotor      = hardwareMap.get(CRServo.class, motorName);
     distanceSensor = hardwareMap.get(DistanceSensor.class, sensorName);
 
     // Initialize controller
@@ -124,7 +123,9 @@ public class LiftSubsystem extends SubsystemBase
     /// Prevent too precise epsilon values to as this is relying on hardware that is not
     /// physically stable or precise.
     if (epsilon < 0.1)
+    {
       epsilon = 0.1;
+    }
 
     return Math.abs(getCurrentDistanceToFloor() - getTargetPosition()) < epsilon;
   }
@@ -139,7 +140,7 @@ public class LiftSubsystem extends SubsystemBase
     liftMotor.setPower(power);
   }
 
-  public DcMotorSimple getLiftMotor()
+  public CRServo getLiftMotor()
   {
     return liftMotor;
   }
