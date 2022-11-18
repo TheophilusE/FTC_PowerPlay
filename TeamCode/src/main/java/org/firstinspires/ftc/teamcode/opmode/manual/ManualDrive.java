@@ -266,8 +266,6 @@ public class ManualDrive extends OpModeBase
       LiftSubsystem liftSubsystem = getComponent(LiftSubsystem.class);
       if (liftSubsystem != null)
       {
-        liftSubsystem.setTargetPosition(LiftSubsystem.LiftLevel.ZERO_LEVEL);
-
         // This is a less hacky method as it only applies power as the difference
         // between the up and down vectors.
         // If the right trigger is greater than the left trigger, it'll go up. (Ex. 1 - 0 = 1)
