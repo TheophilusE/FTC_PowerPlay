@@ -9,6 +9,7 @@ import com.sun.tools.javac.util.Pair;
 
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 import org.firstinspires.ftc.teamcode.control.algorithm.PIDControl;
+import org.firstinspires.ftc.teamcode.math.FastMath;
 
 import java.util.ArrayList;
 
@@ -34,7 +35,7 @@ public class LiftSubsystem extends SubsystemBase
   private double currentPosition;
   private double targetPosition;
 
-  private ArrayList<Pair<LiftLevel, Integer>> liftLevelPairs = new ArrayList<Pair<LiftLevel, Integer>>(4);
+  private ArrayList<Pair<LiftLevel, Double>> liftLevelPairs = new ArrayList<Pair<LiftLevel, Double>>(4);
 
   public static double  LIFT_COEFFICIENT = 1.0;
   public static boolean enableTracking   = false;
@@ -60,10 +61,10 @@ public class LiftSubsystem extends SubsystemBase
     liftPIDControl.enable();
 
     // Fill level pairs
-    liftLevelPairs.add(new Pair<LiftLevel, Integer>(LiftLevel.ZERO_LEVEL, 3));
-    liftLevelPairs.add(new Pair<LiftLevel, Integer>(LiftLevel.ONE_LEVEL, 7));
-    liftLevelPairs.add(new Pair<LiftLevel, Integer>(LiftLevel.TWO_LEVEL, 12));
-    liftLevelPairs.add(new Pair<LiftLevel, Integer>(LiftLevel.THREE_LEVEL, 22));
+    liftLevelPairs.add(new Pair<LiftLevel, Double>(LiftLevel.ZERO_LEVEL, 3.0));
+    liftLevelPairs.add(new Pair<LiftLevel, Double>(LiftLevel.ONE_LEVEL, 7.0));
+    liftLevelPairs.add(new Pair<LiftLevel, Double>(LiftLevel.TWO_LEVEL, 12.0));
+    liftLevelPairs.add(new Pair<LiftLevel, Double>(LiftLevel.THREE_LEVEL, 22.0));
   }
 
   @Override
@@ -95,19 +96,37 @@ public class LiftSubsystem extends SubsystemBase
 
   public void setTargetPosition(LiftLevel liftLevel)
   {
+    double position = getLiftLevelPosition(liftLevel);
+    targetPosition = position;
+  }
+
+  public double getLiftLevelPosition(LiftLevel liftLevel)
+  {
     for (int i = 0; i < liftLevelPairs.size(); ++i)
     {
       if (liftLevelPairs.get(i).fst == liftLevel)
       {
-        targetPosition = liftLevelPairs.get(i).snd.intValue();
+        return liftLevelPairs.get(i).snd.doubleValue();
       }
     }
+
+    return -1.0;
   }
 
   public double getCurrentDistanceToFloor()
   {
     currentPosition = distanceSensor.getDistance(DistanceUnit.INCH); // Update current position
     return currentPosition;
+  }
+
+  public boolean isTargetReached(double epsilon)
+  {
+    /// Prevent too precise epsilon values to as this is relying on hardware that is not
+    /// physically stable or precise.
+    if (epsilon < 0.1)
+      epsilon = 0.1;
+
+    return Math.abs(getCurrentDistanceToFloor() - getTargetPosition()) < epsilon;
   }
 
   public double getMotorPower()
