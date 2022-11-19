@@ -18,7 +18,7 @@ public final class Defines
 
   /// Define to specify which side the robot starts from. Useful for implementing logic that is
   /// Dependent on the side of the robot.
-  public static boolean BLUE_ALLIANCE = true;
+  public static boolean BLUE_ALLIANCE = false;
 
   /// Start Position. This defines the robot's initial heading and location.
   public static Pose2d START_POSE = new Pose2d(6, BLUE_ALLIANCE ? 63 : -63,

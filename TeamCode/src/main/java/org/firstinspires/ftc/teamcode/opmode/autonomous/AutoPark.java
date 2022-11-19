@@ -14,7 +14,7 @@ import org.firstinspires.ftc.teamcode.opmode.OpModeBase;
 @Autonomous(name = "AutoPark", group = "Autonomous")
 public class AutoPark extends OpModeBase
 {
-  TrajectorySequence goToParkZone = null;
+
 
   @Override
   public void initialize()
@@ -25,16 +25,30 @@ public class AutoPark extends OpModeBase
     {
       Defines.autonomousFSM = Defines.AutonomousFSM.IDLE;
     }
-    
-    goToParkZone = driveEngine.trajectorySequenceBuilder(driveEngine.getPoseEstimate())
-        .forward(50)
-        .turn(3)
-        .forward(40)
-        .build();
 
+
+    TrajectorySequence defaultPark = null;
+
+    // Build park trajectory
+    if (Defines.BLUE_ALLIANCE)
+    {
+      // A simple strafe to the right will do
+      defaultPark = driveEngine.trajectorySequenceBuilder(driveEngine.getPoseEstimate())
+          .strafeLeft(60)
+          .build();
+
+    } else
+    {
+      // A simple strafe to the left will do
+      defaultPark = driveEngine.trajectorySequenceBuilder(driveEngine.getPoseEstimate())
+          .strafeRight(60)
+          .build();
+    }
+    // Schedule command
     schedule(new SequentialCommandGroup(
-        new FollowTrajectorySequenceCommand(driveEngine, goToParkZone)
+        new FollowTrajectorySequenceCommand(driveEngine, defaultPark)
     ));
+
   }
 
   @Override
