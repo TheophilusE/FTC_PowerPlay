@@ -18,7 +18,7 @@ public final class Defines
 
   /// Define to specify which side the robot starts from. Useful for implementing logic that is
   /// Dependent on the side of the robot.
-  public static boolean BLUE_ALLIANCE = false;
+  public static boolean BLUE_ALLIANCE = true;
 
   /// Start Position. This defines the robot's initial heading and location.
   public static Pose2d START_POSE = new Pose2d(6, BLUE_ALLIANCE ? 63 : -63,
@@ -79,7 +79,7 @@ public final class Defines
   public static AutonomousFSM autonomousFSM = AutonomousFSM.IDLE;
 
   /// Enable / Disable Camera Stream to the Dashboard.
-  public static boolean ENABLE_CAMERA_STREAM = true;
+  public static boolean ENABLE_CAMERA_STREAM = false;
 
   /// Specify the number of frames a second to render onto the Dashboard.
   public static int STREAM_MAX_FPS = 10;

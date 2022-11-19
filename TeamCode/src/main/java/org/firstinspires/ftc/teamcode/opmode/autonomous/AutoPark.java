@@ -5,8 +5,9 @@ import com.arcrobotics.ftclib.command.SequentialCommandGroup;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 
 import org.firstinspires.ftc.teamcode.control.trajectorysequence.TrajectorySequence;
-import org.firstinspires.ftc.teamcode.hardware.commands.FollowTrajectoryCommand;
+import org.firstinspires.ftc.teamcode.hardware.commands.ClawCommand;
 import org.firstinspires.ftc.teamcode.hardware.commands.FollowTrajectorySequenceCommand;
+import org.firstinspires.ftc.teamcode.hardware.subsystems.ClawSubsystem;
 import org.firstinspires.ftc.teamcode.opmode.Defines;
 import org.firstinspires.ftc.teamcode.opmode.OpModeBase;
 
@@ -26,6 +27,7 @@ public class AutoPark extends OpModeBase
       Defines.autonomousFSM = Defines.AutonomousFSM.IDLE;
     }
 
+    addSubsystem(new ClawSubsystem(hardwareMap));
 
     TrajectorySequence defaultPark = null;
 
@@ -45,9 +47,11 @@ public class AutoPark extends OpModeBase
           .build();
     }
     // Schedule command
-    schedule(new SequentialCommandGroup(
-        new FollowTrajectorySequenceCommand(driveEngine, defaultPark)
-    ));
+    schedule(
+        new SequentialCommandGroup(
+            new ClawCommand(getComponent(ClawSubsystem.class), 0.0, 0.0),
+            new FollowTrajectorySequenceCommand(driveEngine, defaultPark)
+        ));
 
   }
 

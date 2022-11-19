@@ -24,6 +24,18 @@ public class ClawSubsystem extends SubsystemBase
     servoLeft.setPosition(1);
   }
 
+  public ClawSubsystem(final HardwareMap hardwareMap, double leftPosition, double rightPosition)
+  {
+    servoLeft = hardwareMap.get(Servo.class, "leftClaw");
+    servoRight = hardwareMap.get(Servo.class, "rightClaw");
+
+    servoRight.setDirection(Servo.Direction.REVERSE);
+
+    // Set servo initial position
+    servoRight.setPosition(rightPosition);
+    servoLeft.setPosition(leftPosition);
+  }
+
   public void setServoPositions(double servoLeftPosition, double servoRightPosition)
   {
     servoLeft.setPosition(servoLeftPosition);

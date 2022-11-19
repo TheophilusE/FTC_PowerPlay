@@ -47,6 +47,8 @@ public class LiftSubsystem extends SubsystemBase
     liftMotor      = hardwareMap.get(DcMotorSimple.class, motorName);
     distanceSensor = hardwareMap.get(DistanceSensor.class, sensorName);
 
+    liftMotor.setDirection(DcMotorSimple.Direction.REVERSE);
+
     // Initialize controller
     liftPIDControl = new PIDControl(0.5, 0.3, 0.2);
 
