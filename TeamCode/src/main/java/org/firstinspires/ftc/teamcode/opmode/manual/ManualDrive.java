@@ -7,6 +7,7 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.teamcode.control.util.Extensions;
+import org.firstinspires.ftc.teamcode.hardware.subsystems.ClawSubsystem;
 import org.firstinspires.ftc.teamcode.hardware.subsystems.LiftSubsystem;
 import org.firstinspires.ftc.teamcode.opmode.Defines;
 import org.firstinspires.ftc.teamcode.opmode.OpModeBase;
@@ -37,6 +38,15 @@ public class ManualDrive extends OpModeBase
       LiftSubsystem liftSubsystem = new LiftSubsystem(hardwareMap, "liftMotor", "colorDistanceSensor");
       liftSubsystem.enableTracking = false;
       addSubsystem(liftSubsystem);
+
+      telemetry.update();
+    }
+
+    // Register Claw Subsystem
+    {
+      telemetry.addLine("> Register Claw Subsystem...");
+
+      addSubsystem(new ClawSubsystem(hardwareMap));
 
       telemetry.update();
     }
@@ -316,6 +326,27 @@ public class ManualDrive extends OpModeBase
         if (liftSubsystem != null)
         {
           liftSubsystem.setTargetPosition(LiftSubsystem.LiftLevel.TWO_LEVEL);
+        }
+      }
+    }
+
+    // Update claw subsystem
+    {
+      if (gamepad1.b)
+      {
+        ClawSubsystem clawSubsystem = getComponent(ClawSubsystem.class);
+        if (clawSubsystem != null)
+        {
+          clawSubsystem.setServoPositions(0, 0);
+        }
+      }
+
+      if (gamepad1.a)
+      {
+        ClawSubsystem clawSubsystem = getComponent(ClawSubsystem.class);
+        if (clawSubsystem != null)
+        {
+          clawSubsystem.setServoPositions(1.0, 1.0);
         }
       }
     }

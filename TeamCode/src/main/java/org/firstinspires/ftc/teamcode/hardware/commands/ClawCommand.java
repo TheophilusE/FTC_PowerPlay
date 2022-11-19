@@ -5,9 +5,6 @@ import com.arcrobotics.ftclib.command.CommandBase;
 import org.firstinspires.ftc.teamcode.hardware.subsystems.ClawSubsystem;
 import org.firstinspires.ftc.teamcode.hardware.subsystems.ExampleSubsystem;
 
-/*
- * An example command that uses an example subsystem.
- */
 public class ClawCommand extends CommandBase
 {
   // The subsystem that this command runs on.
@@ -15,13 +12,15 @@ public class ClawCommand extends CommandBase
   private final ClawSubsystem subsystem;
 
   /*
-   * Creates a new ExampleCommand.
+   * Creates a new Claw Command.
    *
    * @param subsystem The subsystem used by this command.
    */
-  public ClawCommand(ClawSubsystem subsystem)
+  public ClawCommand(ClawSubsystem subsystem, double servoLeftPosition, double servoRightPosition)
   {
     this.subsystem = subsystem;
+
+    subsystem.setServoPositions(servoLeftPosition, servoRightPosition);
 
     // Use addRequirements() here to declare subsystem dependencies.
     addRequirements(subsystem);
