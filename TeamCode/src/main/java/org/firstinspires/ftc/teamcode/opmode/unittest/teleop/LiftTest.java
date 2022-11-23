@@ -5,6 +5,7 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 
+import org.firstinspires.ftc.teamcode.hardware.subsystems.ClawSubsystem;
 import org.firstinspires.ftc.teamcode.hardware.subsystems.LiftSubsystem;
 import org.firstinspires.ftc.teamcode.opmode.OpModeBase;
 
@@ -12,30 +13,44 @@ import org.firstinspires.ftc.teamcode.opmode.OpModeBase;
 @TeleOp(name = "Lift Test", group = "TeleOpUnitTest")
 public class LiftTest extends OpModeBase
 {
-  public static AutoState state            = AutoState.ONE_LEVEL;
-  public        int       currentLiftLevel = 0;
 
-  CRServo motor = null;
 
   @Override
   public void initialize()
   {
-    super.initialize();
-    motor = hardwareMap.get(CRServo.class, "liftMotor");
+    super.initilize();
   }
 
   @Override
   public void update()
   {
-    motor.setPower(1);
-    driveEngine.setZeroPower();
   }
 
-  public enum AutoState
+  @Override
+  public void registerSubsystems()
   {
-    ZERO_LEVEL,
-    ONE_LEVEL,
-    TWO_LEVEL,
-    THREE_LEVEL
+    super.registerSubsystems();
+
+    // Register Lift Subsystem
+    {
+      telemetry.addLine("> Register Lift Subsystem...");
+
+      LiftSubsystem liftSubsystem = new LiftSubsystem(hardwareMap, "liftMotor", "colorDistanceSensor");
+      liftSubsystem.enableTracking = false;
+      addSubsystem(liftSubsystem);
+
+      telemetry.update();
+    }
+
+    // Register Claw Subsystem
+    {
+      telemetry.addLine("> Register Claw Subsystem...");
+
+      addSubsystem(new ClawSubsystem(hardwareMap));
+
+      telemetry.update();
+    }
   }
 }
+
+
