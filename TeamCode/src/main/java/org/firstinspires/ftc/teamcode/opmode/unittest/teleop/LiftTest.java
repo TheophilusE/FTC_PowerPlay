@@ -18,7 +18,7 @@ public class LiftTest extends OpModeBase
   @Override
   public void initialize()
   {
-    super.initilize();
+
   }
 
   @Override
