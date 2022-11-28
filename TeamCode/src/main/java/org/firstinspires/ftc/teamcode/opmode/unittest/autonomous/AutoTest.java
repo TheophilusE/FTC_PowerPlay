@@ -131,7 +131,7 @@ public class AutoTest extends OpModeBase
         return AutoState.Stop;
       case 2:
         return AutoState.Backward;
-      case 4:
+      case 3:
         return AutoState.ENUM_COUNT;
     }
 

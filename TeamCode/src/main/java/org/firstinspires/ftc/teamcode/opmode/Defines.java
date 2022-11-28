@@ -118,10 +118,10 @@ public final class Defines
   public static final String LIFT_MOTOR = "liftMotor";
 
   /// Subsystem servos
-  public static final String[] CLAW_MOTORS = {"clawLeft", "clawRight"};
+  public static final String[] CLAW_MOTORS = {"leftClaw", "rightClaw"};
 
   /// Subsystem sensors
-  public static final String COLOR_DISTANCE_SENSOR = "colorDistanceSensors";
+  public static final String COLOR_DISTANCE_SENSOR = "colorDistanceSensor";
 
   /// Subsystem accessors
   public static final String CAMERA = "Webcam 1";
