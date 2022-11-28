@@ -8,6 +8,7 @@ import org.firstinspires.ftc.teamcode.control.trajectorysequence.TrajectorySeque
 import org.firstinspires.ftc.teamcode.hardware.commands.ClawCommand;
 import org.firstinspires.ftc.teamcode.hardware.commands.FollowTrajectorySequenceCommand;
 import org.firstinspires.ftc.teamcode.hardware.subsystems.ClawSubsystem;
+import org.firstinspires.ftc.teamcode.hardware.subsystems.LiftSubsystem;
 import org.firstinspires.ftc.teamcode.opmode.Defines;
 import org.firstinspires.ftc.teamcode.opmode.OpModeBase;
 
@@ -15,7 +16,31 @@ import org.firstinspires.ftc.teamcode.opmode.OpModeBase;
 @Autonomous(name = "AutoPark", group = "Autonomous")
 public class AutoPark extends OpModeBase
 {
+  @Override
+  public void registerSubsystems()
+  {
+    super.registerSubsystems();
 
+    // Register Lift Subsystem
+    {
+      telemetry.addLine("> Register Lift Subsystem...");
+
+      LiftSubsystem liftSubsystem = new LiftSubsystem(hardwareMap, Defines.LIFT_MOTOR, Defines.COLOR_DISTANCE_SENSOR);
+      liftSubsystem.enableTracking = true;
+      addSubsystem(liftSubsystem);
+
+      telemetry.update();
+    }
+
+    // Register Claw Subsystem
+    {
+      telemetry.addLine("> Register Claw Subsystem...");
+
+      addSubsystem(new ClawSubsystem(hardwareMap, Defines.CLAW_MOTORS[0], Defines.CLAW_MOTORS[1]));
+
+      telemetry.update();
+    }
+  }
 
   @Override
   public void initialize()
@@ -27,51 +52,38 @@ public class AutoPark extends OpModeBase
       Defines.autonomousFSM = Defines.AutonomousFSM.IDLE;
     }
 
-    addSubsystem(new ClawSubsystem(hardwareMap));
-
-    TrajectorySequence defaultPark = null;
-
-    // Build park trajectory
-    if (Defines.BLUE_ALLIANCE)
+    // Schedule park command
     {
-      // A simple strafe to the right will do
-      defaultPark = driveEngine.trajectorySequenceBuilder(driveEngine.getPoseEstimate())
-          .strafeRight(60)
-          .forward(60)
-          .build();
+      TrajectorySequence defaultPark = null;
 
-    } else
-    {
-      // A simple strafe to the left will do
-      defaultPark = driveEngine.trajectorySequenceBuilder(driveEngine.getPoseEstimate())
-          .strafeLeft(60)
-          .build();
+      // Build park trajectory
+      if (Defines.BLUE_ALLIANCE)
+      {
+        // A simple strafe to the right will do
+        defaultPark = driveEngine.trajectorySequenceBuilder(driveEngine.getPoseEstimate())
+            .strafeRight(60)
+            .forward(60)
+            .build();
+
+      } else
+      {
+        // A simple strafe to the left will do
+        defaultPark = driveEngine.trajectorySequenceBuilder(driveEngine.getPoseEstimate())
+            .strafeLeft(60)
+            .build();
+      }
+      // Schedule command
+      schedule(
+          new SequentialCommandGroup(
+              new ClawCommand(getComponent(ClawSubsystem.class), 0.0, 0.0),
+              new FollowTrajectorySequenceCommand(driveEngine, defaultPark)
+          ));
     }
-    // Schedule command
-    schedule(
-        new SequentialCommandGroup(
-            new ClawCommand(getComponent(ClawSubsystem.class), 0.0, 0.0),
-            new FollowTrajectorySequenceCommand(driveEngine, defaultPark)
-        ));
-
   }
 
   @Override
   public void update()
   {
     // Update Finite State Machine
-    //updateFSM();
-  }
-
-  public void updateFSM()
-  {
-    switch (Defines.autonomousFSM)
-    {
-      default:
-      {
-        driveEngine.setZeroPower();
-      }
-      break;
-    }
   }
 }

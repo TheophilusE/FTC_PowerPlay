@@ -23,15 +23,12 @@ public class MecanumTrigDriveTest extends OpModeBase
     double rightRearPower  = length * Math.cos(angle);
     double rightFrontPower = length * Math.sin(angle);
 
-    // If the length of the angle is greater than 1, then we must restrict all power values such
-    // that the length is 1 as defined by the Unit Circle.
-    if (length > 1.0)
-    {
-      leftFrontPower /= length;
-      leftRearPower /= length;
-      rightRearPower /= length;
-      rightFrontPower /= length;
-    }
+    // Restrict all power values such that the length is less than or equal to 1
+    // as defined by the Unit Circle.
+    leftFrontPower /= length;
+    leftRearPower /= length;
+    rightRearPower /= length;
+    rightFrontPower /= length;
 
     // Apply Rotation
     leftFrontPower += rotation;

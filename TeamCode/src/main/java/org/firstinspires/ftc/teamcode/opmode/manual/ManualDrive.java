@@ -35,7 +35,7 @@ public class ManualDrive extends OpModeBase
     {
       telemetry.addLine("> Register Lift Subsystem...");
 
-      LiftSubsystem liftSubsystem = new LiftSubsystem(hardwareMap, "liftMotor", "colorDistanceSensor");
+      LiftSubsystem liftSubsystem = new LiftSubsystem(hardwareMap, Defines.LIFT_MOTOR, Defines.COLOR_DISTANCE_SENSOR);
       liftSubsystem.enableTracking = false;
       addSubsystem(liftSubsystem);
 
@@ -46,7 +46,7 @@ public class ManualDrive extends OpModeBase
     {
       telemetry.addLine("> Register Claw Subsystem...");
 
-      addSubsystem(new ClawSubsystem(hardwareMap));
+      addSubsystem(new ClawSubsystem(hardwareMap, Defines.CLAW_MOTORS[0], Defines.CLAW_MOTORS[1]));
 
       telemetry.update();
     }
@@ -62,8 +62,10 @@ public class ManualDrive extends OpModeBase
     // Update telemetry
     {
       telemetry.addData(">", " Run Time (s) (%.2f)", getRuntime());
-      telemetry.addData(">", " Motors: Left Front Power (%.2f), Right Front Power (%.2f)", driveEngine.getLeftFrontMotor().getPower(), driveEngine.getRightFrontMotor().getPower());
-      telemetry.addData(">", " Motors: Left Back Power (%.2f), Right Back Power (%.2f)", driveEngine.getLeftRearMotor().getPower(), driveEngine.getRightRearMotor().getPower());
+      telemetry.addData(">", " Motors: Left Front Power (%.2f), Right Front Power (%.2f)",
+                        driveEngine.getLeftFrontMotor().getPower(), driveEngine.getRightFrontMotor().getPower());
+      telemetry.addData(">", " Motors: Left Back Power (%.2f), Right Back Power (%.2f)",
+                        driveEngine.getLeftRearMotor().getPower(), driveEngine.getRightRearMotor().getPower());
     }
   }
 
@@ -117,15 +119,12 @@ public class ManualDrive extends OpModeBase
         double rightRearPower  = length * Math.cos(angle);
         double rightFrontPower = length * Math.sin(angle);
 
-        // If the length of the angle is greater than 1, then we must restrict all power values such
-        // that the length is 1 as defined by the Unit Circle.
-        if (length > 1.0)
-        {
-          leftFrontPower /= length;
-          leftRearPower /= length;
-          rightRearPower /= length;
-          rightFrontPower /= length;
-        }
+        // Restrict all power values such that the length is less than or equal to 1
+        // as defined by the Unit Circle.
+        leftFrontPower /= length;
+        leftRearPower /= length;
+        rightRearPower /= length;
+        rightFrontPower /= length;
 
         // Apply Rotation
         leftFrontPower += rotation;
@@ -133,7 +132,7 @@ public class ManualDrive extends OpModeBase
         rightRearPower -= rotation;
         rightFrontPower -= rotation;
 
-        // Ensure that the length of the vector is the 1
+        // Ensure that the length of the vector is less than or equal to 1
         double rotLength = Math.hypot(leftFrontPower, rightFrontPower);
         leftFrontPower /= rotLength;
         leftRearPower /= rotLength;

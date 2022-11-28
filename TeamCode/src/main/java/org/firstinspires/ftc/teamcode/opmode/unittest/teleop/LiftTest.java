@@ -13,12 +13,10 @@ import org.firstinspires.ftc.teamcode.opmode.OpModeBase;
 @TeleOp(name = "Lift Test", group = "TeleOpUnitTest")
 public class LiftTest extends OpModeBase
 {
-
-
   @Override
   public void initialize()
   {
-
+    super.initialize();
   }
 
   @Override
@@ -36,7 +34,7 @@ public class LiftTest extends OpModeBase
       telemetry.addLine("> Register Lift Subsystem...");
 
       LiftSubsystem liftSubsystem = new LiftSubsystem(hardwareMap, "liftMotor", "colorDistanceSensor");
-      liftSubsystem.enableTracking = false;
+      liftSubsystem.enableTracking = true;
       addSubsystem(liftSubsystem);
 
       telemetry.update();
@@ -46,7 +44,7 @@ public class LiftTest extends OpModeBase
     {
       telemetry.addLine("> Register Claw Subsystem...");
 
-      addSubsystem(new ClawSubsystem(hardwareMap));
+      addSubsystem(new ClawSubsystem(hardwareMap, "leftClaw", "rightClaw"));
 
       telemetry.update();
     }

@@ -103,4 +103,26 @@ public final class Defines
 
     ENUM_COUNT
   }
+
+  /*
+   * Static variables containing motor names
+   */
+
+  /// Drive motors
+  public static final String RIGHT_FRONT = "rightFront";
+  public static final String RIGHT_REAR  = "rightRear";
+  public static final String LEFT_FRONT  = "leftFront";
+  public static final String LEFT_REAR   = "leftRear";
+
+  /// Subsystem motors
+  public static final String LIFT_MOTOR = "liftMotor";
+
+  /// Subsystem servos
+  public static final String[] CLAW_MOTORS = {"clawLeft", "clawRight"};
+
+  /// Subsystem sensors
+  public static final String COLOR_DISTANCE_SENSOR = "colorDistanceSensors";
+
+  /// Subsystem accessors
+  public static final String CAMERA = "Webcam 1";
 }

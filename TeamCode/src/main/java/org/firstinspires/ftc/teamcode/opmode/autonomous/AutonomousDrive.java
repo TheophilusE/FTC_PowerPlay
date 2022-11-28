@@ -52,7 +52,7 @@ public class AutonomousDrive extends OpModeBase
     {
       telemetry.addLine("> Register Lift Subsystem...");
 
-      LiftSubsystem liftSubsystem = new LiftSubsystem(hardwareMap, "liftMotor", "colorDistanceSensor");
+      LiftSubsystem liftSubsystem = new LiftSubsystem(hardwareMap, Defines.LIFT_MOTOR, Defines.COLOR_DISTANCE_SENSOR);
       liftSubsystem.enableTracking = false;
       addSubsystem(liftSubsystem);
 

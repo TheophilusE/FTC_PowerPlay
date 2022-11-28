@@ -48,6 +48,7 @@ import org.firstinspires.ftc.teamcode.control.trajectorysequence.TrajectorySeque
 import org.firstinspires.ftc.teamcode.control.util.AxisDirection;
 import org.firstinspires.ftc.teamcode.control.util.BNO055IMUUtil;
 import org.firstinspires.ftc.teamcode.control.util.LynxModuleUtil;
+import org.firstinspires.ftc.teamcode.opmode.Defines;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -129,10 +130,10 @@ public class DriveEngine extends MecanumDrive
     // The Hub Logo currently faces leftwards, +x is downwards
     BNO055IMUUtil.remapZAxis(imu, AxisDirection.NEG_X);
 
-    leftFront  = hardwareMap.get(DcMotorEx.class, "leftFront");
-    leftRear   = hardwareMap.get(DcMotorEx.class, "leftRear");
-    rightRear  = hardwareMap.get(DcMotorEx.class, "rightRear");
-    rightFront = hardwareMap.get(DcMotorEx.class, "rightFront");
+    leftFront  = hardwareMap.get(DcMotorEx.class, Defines.LEFT_FRONT);
+    leftRear   = hardwareMap.get(DcMotorEx.class, Defines.LEFT_REAR);
+    rightRear  = hardwareMap.get(DcMotorEx.class, Defines.RIGHT_REAR);
+    rightFront = hardwareMap.get(DcMotorEx.class, Defines.RIGHT_FRONT);
 
     motors = Arrays.asList(leftFront, leftRear, rightRear, rightFront);
 
