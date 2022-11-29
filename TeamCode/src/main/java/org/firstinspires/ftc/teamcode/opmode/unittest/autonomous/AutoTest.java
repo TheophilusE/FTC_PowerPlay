@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode.opmode.unittest.autonomous;
 
 import com.acmerobotics.dashboard.config.Config;
+import com.arcrobotics.ftclib.command.InstantCommand;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
@@ -90,7 +91,13 @@ public class AutoTest extends OpModeBase
             .forward(DRIVE_DISTANCE)
             .build();
 
-        schedule(new FollowTrajectorySequenceCommand(driveEngine, forwardSequence));
+
+        schedule(new InstantCommand(() ->
+                                    {
+                                      telemetry.addLine("> Scheduled new Forward Sequence.");
+                                      telemetry.update();
+                                    }),
+                 new FollowTrajectorySequenceCommand(driveEngine, forwardSequence));
       }
       break;
 
@@ -100,7 +107,12 @@ public class AutoTest extends OpModeBase
             .waitSeconds(DRIVE_DISTANCE)
             .build();
 
-        schedule(new FollowTrajectorySequenceCommand(driveEngine, backwardSequence));
+        schedule(new InstantCommand(() ->
+                                    {
+                                      telemetry.addLine("> Scheduled new Backward Sequence.");
+                                      telemetry.update();
+                                    }),
+                 new FollowTrajectorySequenceCommand(driveEngine, backwardSequence));
       }
       break;
 
@@ -110,7 +122,12 @@ public class AutoTest extends OpModeBase
             .waitSeconds(STOP_TIME)
             .build();
 
-        schedule(new FollowTrajectorySequenceCommand(driveEngine, waitSequence));
+        schedule(new InstantCommand(() ->
+                                    {
+                                      telemetry.addLine("> Scheduled new Wait Sequence.");
+                                      telemetry.update();
+                                    }),
+                 new FollowTrajectorySequenceCommand(driveEngine, waitSequence));
       }
       break;
 
