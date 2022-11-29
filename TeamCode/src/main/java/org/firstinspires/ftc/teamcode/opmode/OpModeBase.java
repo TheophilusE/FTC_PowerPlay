@@ -346,5 +346,8 @@ public abstract class OpModeBase extends CommandOpMode
     }
 
     subsystems.add(system);
+
+    // Add subsystem to the command instance
+    register(system);
   }
 }
