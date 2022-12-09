@@ -4,6 +4,8 @@
     <bytecodeTargetLevel target="1.8">
       <module name="FTC-PowerPlay.FtcRobotController" target="11" />
       <module name="FTC-PowerPlay.TeamCode" target="11" />
+      <module name="FTC_PowerPlay.FtcRobotController" target="11" />
+      <module name="FTC_PowerPlay.TeamCode" target="11" />
     </bytecodeTargetLevel>
   </component>
 </project>
