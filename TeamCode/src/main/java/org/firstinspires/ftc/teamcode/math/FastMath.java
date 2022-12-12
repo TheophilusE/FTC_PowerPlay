@@ -1103,4 +1103,23 @@ final public class FastMath
     return (short) (((f >> 16) & 0x8000) | ((((f & 0x7f800000) - 0x38000000) >> 13) & 0x7c00)
                     | ((f >> 13) & 0x03ff));
   }
+
+  /*
+   * Returns a 3 componenent integer array containing the Y, Cb and Cr components respectively.
+   */
+  public static int[] convertRGB2YCRCB(int red, int green, int blue)
+  {
+    // Reference https://sistenix.com/rgb2ycbcr.html
+
+    int[] result = new int[3];
+
+    // Calculate Y
+    result[0] = 16 + (((red << 6) + (red << 1) + (green << 7) + green + (blue << 4) + (blue << 3) + blue) >> 8);
+    // Calculate Cr
+    result[1] = 128 + ((-((red << 5) + (red << 2) + (red << 1)) - ((green << 6) + (green << 3) + (green << 1)) + (blue << 7) - (blue << 4)) >> 8);
+    // Calculate Cb
+    result[2] = 128 + (((red << 7) - (red << 4) - ((green << 6) + (green << 5) - (green << 1)) - ((blue << 4) + (blue << 1))) >> 8);
+
+    return result;
+  }
 }

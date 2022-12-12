@@ -2,6 +2,7 @@ package org.firstinspires.ftc.teamcode.vision.pipeline;
 
 import com.sun.tools.javac.util.Pair;
 
+import org.firstinspires.ftc.teamcode.math.FastMath;
 import org.firstinspires.ftc.teamcode.math.Vector3d;
 import org.firstinspires.ftc.teamcode.opmode.Defines;
 import org.opencv.core.Core;
@@ -20,6 +21,11 @@ import java.util.function.Function;
  */
 public class ShippingElementPipeline extends OpenCvPipeline
 {
+  // Readup the following
+  // - https://en.wikipedia.org/wiki/YCbCr
+  // - https://dsp.stackexchange.com/questions/2687/why-do-we-use-the-hsv-colour-space-so-often-in-vision-and-image-processing
+  // - https://learnmediatech.com/what-is-ycbcr/
+
   public static double centerMarkerPositionX = 0.5;
   public static double centerMarkerPositionY = 0.5;
 
@@ -28,11 +34,11 @@ public class ShippingElementPipeline extends OpenCvPipeline
 
   public static double minThresholdValue = 10; // Smaller values equal more precision
   private final Mat    yCrCbMat          = new Mat();
-  private final Mat    cBMat             = new Mat();
 
   // volatile because it's accessed by the opmode thread with no sync
-  private volatile Defines.ParkTargetSignal                            targetSignal     = Defines.ParkTargetSignal.SIGNAL_NONE;
-  private final    ArrayList<Pair<Defines.ParkTargetSignal, Vector3d>> signalColorPairs = new ArrayList<Pair<Defines.ParkTargetSignal, Vector3d>>(3);
+  private volatile Defines.ParkTargetSignal                            targetSignal          = Defines.ParkTargetSignal.SIGNAL_NONE;
+  private final    ArrayList<Pair<Defines.ParkTargetSignal, Vector3d>> signalColorPairs      = new ArrayList<Pair<Defines.ParkTargetSignal, Vector3d>>(3);
+  private final    ArrayList<Pair<Defines.ParkTargetSignal, Vector3d>> signalColorPairsYCrCB = new ArrayList<Pair<Defines.ParkTargetSignal, Vector3d>>(signalColorPairs.size());
 
   public ShippingElementPipeline()
   {
@@ -40,6 +46,13 @@ public class ShippingElementPipeline extends OpenCvPipeline
     signalColorPairs.add(new Pair<Defines.ParkTargetSignal, Vector3d>(Defines.ParkTargetSignal.SIGNAL_ONE, new Vector3d(255.0, 0.0, 0.0)));
     signalColorPairs.add(new Pair<Defines.ParkTargetSignal, Vector3d>(Defines.ParkTargetSignal.SIGNAL_TWO, new Vector3d(0.0, 255.0, 0.0)));
     signalColorPairs.add(new Pair<Defines.ParkTargetSignal, Vector3d>(Defines.ParkTargetSignal.SIGNAL_THREE, new Vector3d(0.0, 0.0, 255.0)));
+
+    // Compute YCrCb Values
+    for (int i = 0; i < signalColorPairs.size(); ++i)
+    {
+      int[] result = FastMath.convertRGB2YCRCB((int) signalColorPairs.get(i).snd.x, (int) signalColorPairs.get(i).snd.y, (int) signalColorPairs.get(i).snd.z);
+      signalColorPairsYCrCB.add(new Pair<Defines.ParkTargetSignal, Vector3d>(signalColorPairs.get(i).fst, new Vector3d(result[0], result[1], result[2])));
+    }
   }
 
   @Override
@@ -47,9 +60,6 @@ public class ShippingElementPipeline extends OpenCvPipeline
   {
     // Convert to the YCrCb color space from RGB
     Imgproc.cvtColor(input, yCrCbMat, Imgproc.COLOR_RGB2YCrCb);
-
-    // Extract the Cb (blue-difference) channel
-    Core.extractChannel(yCrCbMat, cBMat, 2);
 
     // Create the sample region (s)
     Rect centerSampleRect = new Rect(
@@ -60,7 +70,7 @@ public class ShippingElementPipeline extends OpenCvPipeline
     );
 
     // Submat our sample regions
-    Mat centerSampleRegion = cBMat.submat(centerSampleRect);
+    Mat centerSampleRegion = yCrCbMat.submat(centerSampleRect);
 
     Scalar centerRegionMean = Core.mean(centerSampleRegion);
 
@@ -71,18 +81,18 @@ public class ShippingElementPipeline extends OpenCvPipeline
       Vector3d                 finalColor         = new Vector3d(centerRegionMean.val[0], centerRegionMean.val[1], centerRegionMean.val[2]);
       double                   detectThreshold    = minThresholdValue;
 
-      for (int i = 0; i < signalColorPairs.size(); ++i)
+      for (int i = 0; i < signalColorPairsYCrCB.size(); ++i)
       {
         // Get the distance from the current final color to our expected output color.
         // We could use the Square distance instead to be more efficient but this is done
         // For the sake of simplicity. If there are any performance degradations, use the
         // Distance Squared value to avoid the square root.
-        double distance = finalColor.distance(signalColorPairs.get(i).snd);
+        double distance = finalColor.distance(signalColorPairsYCrCB.get(i).snd);
 
         // Set our new threshold to the current distance, as we are trying to get the closest color.
         if (distance < detectThreshold)
         {
-          bestDetectedSignal = signalColorPairs.get(i).fst;
+          bestDetectedSignal = signalColorPairsYCrCB.get(i).fst;
           detectThreshold    = distance;
         }
       }
