@@ -32,8 +32,10 @@ public class ShippingElementPipeline extends OpenCvPipeline
   public static int centerMarkerPositionWidth  = 20;
   public static int centerMarkerPositionHeight = 20;
 
-  public static double minThresholdValue = 10; // Smaller values equal more precision
-  private final Mat    yCrCbMat          = new Mat();
+  public static double   minThresholdValue = 100; // Smaller values equal more precision
+  private final Mat      yCrCbMat          = new Mat();
+  public        Vector3d yCrCbFinalColor        = new Vector3d();
+  public        Vector3d rgbFinalColor        = new Vector3d();
 
   // volatile because it's accessed by the opmode thread with no sync
   private volatile Defines.ParkTargetSignal                            targetSignal          = Defines.ParkTargetSignal.SIGNAL_NONE;
@@ -43,9 +45,9 @@ public class ShippingElementPipeline extends OpenCvPipeline
   public ShippingElementPipeline()
   {
     // Populate signal pairs
-    signalColorPairs.add(new Pair<Defines.ParkTargetSignal, Vector3d>(Defines.ParkTargetSignal.SIGNAL_ONE, new Vector3d(255.0, 0.0, 0.0)));
-    signalColorPairs.add(new Pair<Defines.ParkTargetSignal, Vector3d>(Defines.ParkTargetSignal.SIGNAL_TWO, new Vector3d(0.0, 255.0, 0.0)));
-    signalColorPairs.add(new Pair<Defines.ParkTargetSignal, Vector3d>(Defines.ParkTargetSignal.SIGNAL_THREE, new Vector3d(0.0, 0.0, 255.0)));
+    signalColorPairs.add(new Pair<Defines.ParkTargetSignal, Vector3d>(Defines.ParkTargetSignal.SIGNAL_ONE, new Vector3d(41.0, 118.0, 187.0)));
+    signalColorPairs.add(new Pair<Defines.ParkTargetSignal, Vector3d>(Defines.ParkTargetSignal.SIGNAL_TWO, new Vector3d(51.0, 184.0, 100.0)));
+    signalColorPairs.add(new Pair<Defines.ParkTargetSignal, Vector3d>(Defines.ParkTargetSignal.SIGNAL_THREE, new Vector3d(253.0, 89.0, 86.0)));
 
     // Compute YCrCb Values
     for (int i = 0; i < signalColorPairs.size(); ++i)
@@ -71,15 +73,18 @@ public class ShippingElementPipeline extends OpenCvPipeline
 
     // Submat our sample regions
     Mat centerSampleRegion = yCrCbMat.submat(centerSampleRect);
+    Mat rgbCenterSampleRegion = input.submat(centerSampleRect);
 
     Scalar centerRegionMean = Core.mean(centerSampleRegion);
+    Scalar rgbCenterRegionMean = Core.mean(rgbCenterSampleRegion);
 
     // Detect marker type and deduce marker color.
     boolean centerMarkerDetected = false;
     {
       Defines.ParkTargetSignal bestDetectedSignal = Defines.ParkTargetSignal.SIGNAL_NONE;
-      Vector3d                 finalColor         = new Vector3d(centerRegionMean.val[0], centerRegionMean.val[1], centerRegionMean.val[2]);
-      double                   detectThreshold    = minThresholdValue;
+      yCrCbFinalColor = new Vector3d(centerRegionMean.val[0], centerRegionMean.val[1], centerRegionMean.val[2]);
+      rgbFinalColor = new Vector3d(rgbCenterRegionMean.val[0], rgbCenterRegionMean.val[1], rgbCenterRegionMean.val[2]);
+      double detectThreshold = minThresholdValue;
 
       for (int i = 0; i < signalColorPairsYCrCB.size(); ++i)
       {
@@ -87,12 +92,12 @@ public class ShippingElementPipeline extends OpenCvPipeline
         // We could use the Square distance instead to be more efficient but this is done
         // For the sake of simplicity. If there are any performance degradations, use the
         // Distance Squared value to avoid the square root.
-        double distance = finalColor.distance(signalColorPairsYCrCB.get(i).snd);
+        double distance = rgbFinalColor.distance(signalColorPairs.get(i).snd);
 
         // Set our new threshold to the current distance, as we are trying to get the closest color.
         if (distance < detectThreshold)
         {
-          bestDetectedSignal = signalColorPairsYCrCB.get(i).fst;
+          bestDetectedSignal = signalColorPairs.get(i).fst;
           detectThreshold    = distance;
         }
       }
@@ -117,7 +122,7 @@ public class ShippingElementPipeline extends OpenCvPipeline
     switch (targetSignal)
     {
       case SIGNAL_NONE:
-        Imgproc.rectangle(input, centerSampleRect, new Scalar(255.0f, 255.0, 255.0), 2);
+        Imgproc.rectangle(input, centerSampleRect, new Scalar(255.0, 255.0, 255.0), 2);
         break;
       case SIGNAL_ONE:
         Imgproc.rectangle(input, centerSampleRect, new Scalar(signalColorPairs.get(0).snd.x, signalColorPairs.get(0).snd.y, signalColorPairs.get(0).snd.z), 2);
@@ -156,6 +161,7 @@ public class ShippingElementPipeline extends OpenCvPipeline
 
     // Release to avoid memory leaks
     centerSampleRegion.release();
+    rgbCenterSampleRegion.release();
 
     return input;
   }

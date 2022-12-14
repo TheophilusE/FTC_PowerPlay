@@ -46,7 +46,7 @@ public class ManualDrive extends OpModeBase
     {
       telemetry.addLine("> Register Claw Subsystem...");
 
-      addSubsystem(new ClawSubsystem(hardwareMap, Defines.CLAW_MOTORS[0], Defines.CLAW_MOTORS[1]));
+      addSubsystem(new ClawSubsystem(hardwareMap, Defines.CLAW_MOTORS[0], Defines.CLAW_MOTORS[1], 1, 0.0));
 
       telemetry.update();
     }
