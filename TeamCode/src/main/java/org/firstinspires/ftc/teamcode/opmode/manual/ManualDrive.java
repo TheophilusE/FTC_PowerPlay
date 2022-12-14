@@ -37,6 +37,7 @@ public class ManualDrive extends OpModeBase
 
       LiftSubsystem liftSubsystem = new LiftSubsystem(hardwareMap, Defines.LIFT_MOTOR, Defines.COLOR_DISTANCE_SENSOR);
       liftSubsystem.enableTracking = false;
+      liftSubsystem.setTargetPosition(LiftSubsystem.LiftLevel.ZERO_LEVEL);
       addSubsystem(liftSubsystem);
 
       telemetry.update();
@@ -46,7 +47,7 @@ public class ManualDrive extends OpModeBase
     {
       telemetry.addLine("> Register Claw Subsystem...");
 
-      addSubsystem(new ClawSubsystem(hardwareMap, Defines.CLAW_MOTORS[0], Defines.CLAW_MOTORS[1], 1, 0.0));
+      addSubsystem(new ClawSubsystem(hardwareMap, Defines.CLAW_MOTORS[0], Defines.CLAW_MOTORS[1], 1, 0));
 
       telemetry.update();
     }
@@ -66,6 +67,14 @@ public class ManualDrive extends OpModeBase
                         driveEngine.getLeftFrontMotor().getPower(), driveEngine.getRightFrontMotor().getPower());
       telemetry.addData(">", " Motors: Left Back Power (%.2f), Right Back Power (%.2f)",
                         driveEngine.getLeftRearMotor().getPower(), driveEngine.getRightRearMotor().getPower());
+
+      {
+        LiftSubsystem liftSubsystem = getComponent(LiftSubsystem.class);
+        if (liftSubsystem != null)
+        {
+          telemetry.addData(">", " Current Distance to Floor: %.2f", liftSubsystem.getCurrentDistanceToFloor());
+        }
+      }
     }
   }
 
@@ -271,6 +280,7 @@ public class ManualDrive extends OpModeBase
     }
 
     // Update Lift Subsystem
+    if (true)
     {
       LiftSubsystem liftSubsystem = getComponent(LiftSubsystem.class);
       if (liftSubsystem != null)
