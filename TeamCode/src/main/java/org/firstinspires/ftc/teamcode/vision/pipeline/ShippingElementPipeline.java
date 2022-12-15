@@ -34,8 +34,8 @@ public class ShippingElementPipeline extends OpenCvPipeline
 
   public static double   minThresholdValue = 100; // Smaller values equal more precision
   private final Mat      yCrCbMat          = new Mat();
-  public        Vector3d yCrCbFinalColor        = new Vector3d();
-  public        Vector3d rgbFinalColor        = new Vector3d();
+  public        Vector3d yCrCbFinalColor   = new Vector3d();
+  public        Vector3d rgbFinalColor     = new Vector3d();
 
   // volatile because it's accessed by the opmode thread with no sync
   private volatile Defines.ParkTargetSignal                            targetSignal          = Defines.ParkTargetSignal.SIGNAL_NONE;
@@ -72,10 +72,10 @@ public class ShippingElementPipeline extends OpenCvPipeline
     );
 
     // Submat our sample regions
-    Mat centerSampleRegion = yCrCbMat.submat(centerSampleRect);
+    Mat centerSampleRegion    = yCrCbMat.submat(centerSampleRect);
     Mat rgbCenterSampleRegion = input.submat(centerSampleRect);
 
-    Scalar centerRegionMean = Core.mean(centerSampleRegion);
+    Scalar centerRegionMean    = Core.mean(centerSampleRegion);
     Scalar rgbCenterRegionMean = Core.mean(rgbCenterSampleRegion);
 
     // Detect marker type and deduce marker color.
@@ -83,7 +83,7 @@ public class ShippingElementPipeline extends OpenCvPipeline
     {
       Defines.ParkTargetSignal bestDetectedSignal = Defines.ParkTargetSignal.SIGNAL_NONE;
       yCrCbFinalColor = new Vector3d(centerRegionMean.val[0], centerRegionMean.val[1], centerRegionMean.val[2]);
-      rgbFinalColor = new Vector3d(rgbCenterRegionMean.val[0], rgbCenterRegionMean.val[1], rgbCenterRegionMean.val[2]);
+      rgbFinalColor   = new Vector3d(rgbCenterRegionMean.val[0], rgbCenterRegionMean.val[1], rgbCenterRegionMean.val[2]);
       double detectThreshold = minThresholdValue;
 
       for (int i = 0; i < signalColorPairsYCrCB.size(); ++i)
@@ -102,9 +102,10 @@ public class ShippingElementPipeline extends OpenCvPipeline
         }
       }
 
+      targetSignal = bestDetectedSignal;
+
       if (bestDetectedSignal != Defines.ParkTargetSignal.SIGNAL_NONE)
       {
-        targetSignal         = bestDetectedSignal;
         centerMarkerDetected = true;
       }
     }
