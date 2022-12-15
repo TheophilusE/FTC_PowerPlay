@@ -5,6 +5,7 @@ import com.arcrobotics.ftclib.command.SequentialCommandGroup;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
+import org.firstinspires.ftc.teamcode.control.derived.AutonomousUtils;
 import org.firstinspires.ftc.teamcode.control.trajectorysequence.TrajectorySequence;
 import org.firstinspires.ftc.teamcode.hardware.commands.FollowTrajectorySequenceCommand;
 import org.firstinspires.ftc.teamcode.hardware.subsystems.LiftSubsystem;
@@ -34,6 +35,8 @@ public class AutonomousDrive extends OpModeBase
   public void initialize()
   {
     super.initialize();
+
+    AutonomousUtils.InitializeHeading();
 
     if (!Defines.FSM_STATE_OVERRIDE)
     {
@@ -121,6 +124,7 @@ public class AutonomousDrive extends OpModeBase
   {
     switch (parkTargetSignal)
     {
+      /// Default park
       case SIGNAL_NONE:
       {
         TrajectorySequence defaultPark = null;
@@ -148,6 +152,7 @@ public class AutonomousDrive extends OpModeBase
       }
       break;
 
+      /// Park in the leftward zone
       case SIGNAL_ONE:
       {
         TrajectorySequence defaultPark = null;
@@ -166,6 +171,7 @@ public class AutonomousDrive extends OpModeBase
       }
       break;
 
+      /// Park in the zone in front of the robot.
       case SIGNAL_TWO:
       {
         TrajectorySequence defaultPark = null;
@@ -183,6 +189,7 @@ public class AutonomousDrive extends OpModeBase
       }
       break;
 
+      /// Park in the zone rightward of the robot.
       case SIGNAL_THREE:
       {
         TrajectorySequence defaultPark = null;

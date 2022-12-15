@@ -2,12 +2,21 @@ package org.firstinspires.ftc.teamcode.opmode.unittest.teleop;
 
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
+import org.firstinspires.ftc.teamcode.control.derived.AutonomousUtils;
 import org.firstinspires.ftc.teamcode.opmode.Defines;
 import org.firstinspires.ftc.teamcode.opmode.OpModeBase;
 
 @TeleOp(name = "MecanumDriveTest", group = "TeleOpUnitTest")
 public class MecanumTrigDriveTest extends OpModeBase
 {
+  @Override
+  public void initialize()
+  {
+    super.initialize();
+
+    AutonomousUtils.InitializeHeading();
+  }
+
   @Override
   public void update()
   {

@@ -5,6 +5,7 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 
+import org.firstinspires.ftc.teamcode.control.derived.AutonomousUtils;
 import org.firstinspires.ftc.teamcode.hardware.subsystems.ClawSubsystem;
 import org.firstinspires.ftc.teamcode.hardware.subsystems.LiftSubsystem;
 import org.firstinspires.ftc.teamcode.opmode.Defines;
@@ -18,6 +19,8 @@ public class LiftTest extends OpModeBase
   public void initialize()
   {
     super.initialize();
+
+    AutonomousUtils.InitializeHeading();
   }
 
   @Override

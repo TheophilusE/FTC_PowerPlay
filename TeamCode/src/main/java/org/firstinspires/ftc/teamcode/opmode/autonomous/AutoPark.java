@@ -4,6 +4,7 @@ import com.acmerobotics.dashboard.config.Config;
 import com.arcrobotics.ftclib.command.SequentialCommandGroup;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 
+import org.firstinspires.ftc.teamcode.control.derived.AutonomousUtils;
 import org.firstinspires.ftc.teamcode.control.trajectorysequence.TrajectorySequence;
 import org.firstinspires.ftc.teamcode.hardware.commands.ClawCommand;
 import org.firstinspires.ftc.teamcode.hardware.commands.FollowTrajectorySequenceCommand;
@@ -20,6 +21,8 @@ public class AutoPark extends OpModeBase
   public void registerSubsystems()
   {
     super.registerSubsystems();
+
+    AutonomousUtils.InitializeHeading();
 
     // Register Lift Subsystem
     {

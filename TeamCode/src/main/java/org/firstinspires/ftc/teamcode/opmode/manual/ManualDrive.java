@@ -6,6 +6,7 @@ import com.acmerobotics.roadrunner.geometry.Vector2d;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
+import org.firstinspires.ftc.teamcode.control.derived.AutonomousUtils;
 import org.firstinspires.ftc.teamcode.control.util.Extensions;
 import org.firstinspires.ftc.teamcode.hardware.subsystems.ClawSubsystem;
 import org.firstinspires.ftc.teamcode.hardware.subsystems.LiftSubsystem;
@@ -30,6 +31,8 @@ public class ManualDrive extends OpModeBase
   public void registerSubsystems()
   {
     super.registerSubsystems();
+
+    AutonomousUtils.InitializeHeading();
 
     // Register Lift Subsystem
     {

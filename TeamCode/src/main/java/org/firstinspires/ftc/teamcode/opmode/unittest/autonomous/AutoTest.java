@@ -5,6 +5,7 @@ import com.arcrobotics.ftclib.command.InstantCommand;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
+import org.firstinspires.ftc.teamcode.control.derived.AutonomousUtils;
 import org.firstinspires.ftc.teamcode.control.trajectorysequence.TrajectorySequence;
 import org.firstinspires.ftc.teamcode.hardware.commands.FollowTrajectorySequenceCommand;
 import org.firstinspires.ftc.teamcode.opmode.OpModeBase;
@@ -34,6 +35,8 @@ public class AutoTest extends OpModeBase
   public void initialize()
   {
     super.initialize();
+
+    AutonomousUtils.InitializeHeading();
 
     // Reset timer
     elapsedTime.reset();
