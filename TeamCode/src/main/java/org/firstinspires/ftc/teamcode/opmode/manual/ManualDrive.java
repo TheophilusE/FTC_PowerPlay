@@ -4,6 +4,7 @@ import com.acmerobotics.dashboard.config.Config;
 import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.acmerobotics.roadrunner.geometry.Vector2d;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+import com.qualcomm.robotcore.hardware.Servo;
 
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.teamcode.control.derived.AutonomousUtils;
@@ -50,7 +51,7 @@ public class ManualDrive extends OpModeBase
     {
       telemetry.addLine("> Register Claw Subsystem...");
 
-      addSubsystem(new ClawSubsystem(hardwareMap, Defines.CLAW_MOTORS[0], Defines.CLAW_MOTORS[1], 1, 0));
+      addSubsystem(new ClawSubsystem(hardwareMap, Defines.CLAW_MOTORS[0], Defines.CLAW_MOTORS[1], 0.0, 0.35));
 
       telemetry.update();
     }
@@ -178,7 +179,7 @@ public class ManualDrive extends OpModeBase
 
         // Get vector direction, derived from the (x, y) positions on the gamepad control axes
         // And rotate the vector by the inverse of the current heading
-        Vector2d inputVector = new Vector2d(-gamepad1.left_stick_x, gamepad1.left_stick_y).rotated(-currentPosition.getHeading());
+        Vector2d inputVector = new Vector2d(-gamepad1.left_stick_x, -gamepad1.left_stick_y).rotated(-currentPosition.getHeading());
 
         // Pass in the rotated input + right stick value for rotation
         // Rotation is not part of the rotated input, thus, it must be passed in separately
@@ -236,6 +237,7 @@ public class ManualDrive extends OpModeBase
         telemetry.addLine("> Press the left bumper to re-zero the heading.");
         telemetry.addData("> Current Heading with offset", AngleUnit.DEGREES.fromRadians(driveEngine.getHeadingOffset(robotAngleOffset)));
         telemetry.addData("> Offset", AngleUnit.DEGREES.fromRadians(robotAngleOffset));
+
       }
       break;
 
@@ -347,23 +349,58 @@ public class ManualDrive extends OpModeBase
 
     // Update claw subsystem
     {
+      //Servo leftClaw  = null;
+      //Servo rightClaw = null;
+
+      //leftClaw  = hardwareMap.get(Servo.class, "leftClaw");
+      //rightClaw = hardwareMap.get(Servo.class, "rightClaw");
+      //double leftServoPos;
+      //double rightServoPos;
+      //{
+      //initialize();
+      //leftClaw.setPosition(0);
+      //rightClaw.setPosition(0.3);
+
+      //leftServoPos = 0;
+      //rightServoPos = 0.3;
+      //}
+
+      //leftClaw.setPosition(leftServoPos);
+      //rightClaw.setPosition(rightServoPos);
+
+      //if (gamepad1.a)
+      //{
+      //leftServoPos  = 0;
+      //rightServoPos = 0.35;
+      //}
+      //if (gamepad1.b)
+      //{
+      //leftServoPos  = 0.3;
+      //rightServoPos = 0;
+      //}
+
+
       if (gamepad1.b)
       {
         ClawSubsystem clawSubsystem = getComponent(ClawSubsystem.class);
         if (clawSubsystem != null)
         {
-          clawSubsystem.setServoPositions(0, 0);
+          clawSubsystem.setServoPositions(0.0, 0.35);
         }
       }
-
-      if (gamepad1.a)
       {
-        ClawSubsystem clawSubsystem = getComponent(ClawSubsystem.class);
-        if (clawSubsystem != null)
+        if (gamepad1.a)
         {
-          clawSubsystem.setServoPositions(1.0, 1.0);
+          ClawSubsystem clawSubsystem = getComponent(ClawSubsystem.class);
+          if (clawSubsystem != null)
+          {
+            clawSubsystem.setServoPositions(0.35, 0.0);
+          }
+
         }
       }
     }
   }
 }
+
+
