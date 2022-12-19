@@ -98,6 +98,7 @@ public class ManualDrive extends OpModeBase
     // [-1: Up,   1: Down]
     // [-1: Left, 1: Right]
 
+    // Update field relative offset if using the IMU.
     if (Defines.DRIVE_MODE == Defines.DriveMode.FIELD_CENTRIC_IMU)
     {
       double heading = driveEngine.getHeadingOffset(robotAngleOffset);
