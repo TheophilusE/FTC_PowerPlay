@@ -119,7 +119,7 @@ public class ManualDrive extends OpModeBase
         // Set the current drive mode that may be updated through the dashboard
         driveSubsystem.setDriveMode(Defines.DRIVE_MODE);
 
-        // Set movemement vector from gamepad input.
+        // Set movement vector from gamepad input.
         driveSubsystem.setMovementVector(new Vector3d(gamepad1.left_stick_x, -gamepad1.left_stick_y, gamepad1.right_stick_x));
 
         // Update heading if using the IMU for the field relative drive mode.
