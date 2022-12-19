@@ -3,6 +3,7 @@ package org.firstinspires.ftc.teamcode.opmode.autonomous;
 import com.acmerobotics.dashboard.config.Config;
 import com.arcrobotics.ftclib.command.SequentialCommandGroup;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.control.derived.AutonomousUtils;
@@ -23,8 +24,9 @@ import org.firstinspires.ftc.teamcode.opmode.OpModeBase;
  */
 
 @Config
-@Autonomous(name = "Autonomous Drive", group = "Autonomous")
-public class AutonomousDrive extends OpModeBase
+@Disabled
+@Autonomous(name = "Autonomous Drive Stale", group = "Autonomous")
+public class AutonomousDriveStale extends OpModeBase
 {
   /// Timers
   private ElapsedTime idleElapsedTime = new ElapsedTime();
@@ -130,25 +132,25 @@ public class AutonomousDrive extends OpModeBase
         TrajectorySequence defaultPark = null;
 
         // Build park trajectory
-        if (Defines.BLUE_ALLIANCE)
+        //if (Defines.BLUE_ALLIANCE)
         {
           // A simple strafe to the right will do
           defaultPark = driveEngine.trajectorySequenceBuilder(driveEngine.getPoseEstimate())
-              .strafeRight(24 * 4)
+              .strafeLeft(24)
               .build();
 
-        } else
+        } //else
         {
           // A simple strafe to the left will do
           defaultPark = driveEngine.trajectorySequenceBuilder(driveEngine.getPoseEstimate())
-              .strafeLeft(24 * 4)
+              .strafeRight(24)
               .build();
         }
 
         // Schedule command
-        schedule(new SequentialCommandGroup(
-            new FollowTrajectorySequenceCommand(driveEngine, defaultPark)
-        ));
+        //schedule(new SequentialCommandGroup(
+            new FollowTrajectorySequenceCommand(driveEngine, defaultPark);
+        ;
       }
       break;
 
@@ -160,8 +162,8 @@ public class AutonomousDrive extends OpModeBase
         // Build park trajectory, this is Alliance agnostic
         // The zone is always to the left of the robot
         defaultPark = driveEngine.trajectorySequenceBuilder(driveEngine.getPoseEstimate())
-            .strafeLeft(24 * 2)
-            .forward(24 * 4)
+            .strafeRight(5)
+            .forward(5)
             .build();
 
         // Schedule command
@@ -172,6 +174,7 @@ public class AutonomousDrive extends OpModeBase
       break;
 
       /// Park in the zone in front of the robot.
+      // green is forward park (Zone 2)
       case SIGNAL_TWO:
       {
         TrajectorySequence defaultPark = null;
@@ -179,7 +182,7 @@ public class AutonomousDrive extends OpModeBase
         // Build park trajectory, this is Alliance agnostic
         // A simple strafe forwards will do, the zone is always in front of the robot
         defaultPark = driveEngine.trajectorySequenceBuilder(driveEngine.getPoseEstimate())
-            .forward(24 * 4)
+            .forward(5)
             .build();
 
         // Schedule command
@@ -197,8 +200,8 @@ public class AutonomousDrive extends OpModeBase
         // Build park trajectory, this is Alliance agnostic
         // The zone is always to the right of the robot
         defaultPark = driveEngine.trajectorySequenceBuilder(driveEngine.getPoseEstimate())
-            .strafeRight(24 * 2)
-            .forward(24 * 4)
+            .strafeLeft(24*2)
+            .forward(5)
             .build();
 
         // Schedule command
