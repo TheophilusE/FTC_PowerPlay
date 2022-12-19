@@ -38,11 +38,17 @@ public final class Defines
    */
   public enum DriveMode
   {
+    /// No drive mode enabled.
+    NONE,
+    /// Defacto holonomic drive that is robot centric.
     ROBOT_CENTRIC_HOLONOMIC,
+    /// Successor to the holonomic drive that ensures a smoother drive.
     ROBOT_CENTRIC_MECANUM,
+    /// Drive mode relative to the gamepad, field centric.
     FIELD_CENTRIC_GAMEPAD,
+    /// Successor to the field centric gamepad that uses the internal IMU.
     FIELD_CENTRIC_IMU,
-
+    /// All supported drive modes must be defined before this.
     ENUM_COUNT
   }
 
