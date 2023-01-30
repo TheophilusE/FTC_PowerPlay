@@ -78,7 +78,7 @@ public class AutoPark extends OpModeBase
       // Schedule command
       schedule(
           new SequentialCommandGroup(
-              new ClawCommand(getComponent(ClawSubsystem.class), 0.0, 0.0),
+              new ClawCommand(getComponent(ClawSubsystem.class), ClawSubsystem.ClawPosition.CLOSE),
               new FollowTrajectorySequenceCommand(driveEngine, defaultPark)
           ));
     }

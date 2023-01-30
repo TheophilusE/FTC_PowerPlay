@@ -3,7 +3,6 @@ package org.firstinspires.ftc.teamcode.hardware.commands;
 import com.arcrobotics.ftclib.command.CommandBase;
 
 import org.firstinspires.ftc.teamcode.hardware.subsystems.ClawSubsystem;
-import org.firstinspires.ftc.teamcode.hardware.subsystems.ExampleSubsystem;
 
 public class ClawCommand extends CommandBase
 {
@@ -16,11 +15,11 @@ public class ClawCommand extends CommandBase
    *
    * @param subsystem The subsystem used by this command.
    */
-  public ClawCommand(ClawSubsystem subsystem, double servoLeftPosition, double servoRightPosition)
+  public ClawCommand(ClawSubsystem subsystem, ClawSubsystem.ClawPosition clawPosition)
   {
     this.subsystem = subsystem;
 
-    subsystem.setServoPositions(servoLeftPosition, servoRightPosition);
+    subsystem.setClawPosition(clawPosition);
 
     // Use addRequirements() here to declare subsystem dependencies.
     addRequirements(subsystem);

@@ -65,7 +65,8 @@ public class ManualDrive extends OpModeBase
       telemetry.addLine("> Register Claw Subsystem...");
       telemetry.update();
 
-      ClawSubsystem clawSubsystem = new ClawSubsystem(hardwareMap, Defines.CLAW_MOTORS[0], Defines.CLAW_MOTORS[1], 0.0, 0.35);
+      ClawSubsystem clawSubsystem = new ClawSubsystem(hardwareMap, Defines.CLAW_MOTORS[0], Defines.CLAW_MOTORS[1]);
+      clawSubsystem.setClawPosition(ClawSubsystem.ClawPosition.OPEN);
 
       addSubsystem(clawSubsystem);
     }
@@ -202,7 +203,7 @@ public class ManualDrive extends OpModeBase
         ClawSubsystem clawSubsystem = getComponent(ClawSubsystem.class);
         if (clawSubsystem != null)
         {
-          clawSubsystem.setServoPositions(0.0, 0.35);
+          clawSubsystem.setClawPosition(ClawSubsystem.ClawPosition.CLOSE);
         }
       }
       if (gamepad1.a)
@@ -210,11 +211,9 @@ public class ManualDrive extends OpModeBase
         ClawSubsystem clawSubsystem = getComponent(ClawSubsystem.class);
         if (clawSubsystem != null)
         {
-          clawSubsystem.setServoPositions(0.35, 0.0);
+          clawSubsystem.setClawPosition(ClawSubsystem.ClawPosition.OPEN);
         }
       }
     }
   }
 }
-
-
