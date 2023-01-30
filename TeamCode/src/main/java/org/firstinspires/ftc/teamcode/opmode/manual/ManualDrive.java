@@ -2,6 +2,7 @@ package org.firstinspires.ftc.teamcode.opmode.manual;
 
 import com.acmerobotics.dashboard.config.Config;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
 
 import org.firstinspires.ftc.teamcode.control.derived.AutonomousUtils;
 import org.firstinspires.ftc.teamcode.hardware.subsystems.ClawSubsystem;
@@ -48,8 +49,13 @@ public class ManualDrive extends OpModeBase
       telemetry.update();
 
       LiftSubsystem liftSubsystem = new LiftSubsystem(hardwareMap, Defines.LIFT_MOTOR, Defines.COLOR_DISTANCE_SENSOR);
+
+      // Disable tracking. If tracking is enabled, it is advised to set the start position to zero level after
+      // setting the motor direction.
       liftSubsystem.enableTracking = false;
-      liftSubsystem.setTargetPosition(LiftSubsystem.LiftLevel.ZERO_LEVEL);
+
+      // Set the direction of the motor such that positive values result in an upwards movement and vice versa.
+      liftSubsystem.getLiftMotor().setDirection(DcMotorSimple.Direction.REVERSE);
 
       addSubsystem(liftSubsystem);
     }
@@ -173,7 +179,8 @@ public class ManualDrive extends OpModeBase
     }
 
     // Update Lift Subsystem
-    if (true)
+    // Note: Manual control is enforced on the Driver OpMode, if automatic control is needed
+    // This can be replaced with liftSubsystem.setTargetPosition() based on a button being pressed.
     {
       LiftSubsystem liftSubsystem = getComponent(LiftSubsystem.class);
       if (liftSubsystem != null)
@@ -185,50 +192,6 @@ public class ManualDrive extends OpModeBase
         // If they are the same, it will apply zero power (Ex. 1 - 1 = 0 or 0 - 0 = 0)
         double difference = gamepad1.right_trigger - gamepad1.left_trigger;
         liftSubsystem.getLiftMotor().setPower(difference);
-      }
-    }
-
-    // Update Lift Subsystem
-    if (false) // Disabled for now
-    {
-      // Rest Position (zero or start position)
-      if (gamepad1.x)
-      {
-        LiftSubsystem liftSubsystem = getComponent(LiftSubsystem.class);
-        if (liftSubsystem != null)
-        {
-          liftSubsystem.setTargetPosition(LiftSubsystem.LiftLevel.THREE_LEVEL);
-        }
-      }
-
-      // First position (smallest position)
-      if (gamepad1.a)
-      {
-        LiftSubsystem liftSubsystem = getComponent(LiftSubsystem.class);
-        if (liftSubsystem != null)
-        {
-          liftSubsystem.setTargetPosition(LiftSubsystem.LiftLevel.ZERO_LEVEL);
-        }
-      }
-
-      // Second position (middle position)
-      if (gamepad1.b)
-      {
-        LiftSubsystem liftSubsystem = getComponent(LiftSubsystem.class);
-        if (liftSubsystem != null)
-        {
-          liftSubsystem.setTargetPosition(LiftSubsystem.LiftLevel.ONE_LEVEL);
-        }
-      }
-
-      // Third Position (highest position)
-      if (gamepad1.y)
-      {
-        LiftSubsystem liftSubsystem = getComponent(LiftSubsystem.class);
-        if (liftSubsystem != null)
-        {
-          liftSubsystem.setTargetPosition(LiftSubsystem.LiftLevel.TWO_LEVEL);
-        }
       }
     }
 
