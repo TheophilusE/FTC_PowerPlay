@@ -2,7 +2,6 @@ package org.firstinspires.ftc.teamcode.hardware.subsystems;
 
 import com.acmerobotics.dashboard.config.Config;
 import com.arcrobotics.ftclib.command.SubsystemBase;
-import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.DistanceSensor;
 import com.qualcomm.robotcore.hardware.HardwareMap;
@@ -16,12 +15,17 @@ import java.util.ArrayList;
 @Config
 public class LiftSubsystem extends SubsystemBase
 {
+  /*
+   * Enumeration of all supported lift levels.
+   */
   public enum LiftLevel
   {
     ZERO_LEVEL,
     ONE_LEVEL,
     TWO_LEVEL,
-    THREE_LEVEL
+    THREE_LEVEL,
+
+    ENUM_COUNT
   }
 
   // Motors
@@ -43,7 +47,7 @@ public class LiftSubsystem extends SubsystemBase
   // Construct
   public LiftSubsystem(final HardwareMap hardwareMap, final String motorName, final String sensorName)
   {
-    // Retrieve accessors hardware
+    // Retrieve hardware interfacing object
     liftMotor      = hardwareMap.get(DcMotorSimple.class, motorName);
     distanceSensor = hardwareMap.get(DistanceSensor.class, sensorName);
 
@@ -102,8 +106,14 @@ public class LiftSubsystem extends SubsystemBase
     targetPosition = position;
   }
 
+  /*
+   * Retrieve the value of a lift position.
+   * Returns NaN if the a value cannot be determined in the case of ENUM_COUNT.
+   */
   public double getLiftLevelPosition(LiftLevel liftLevel)
   {
+    assert (liftLevel != LiftLevel.ENUM_COUNT) : "Lift level must be less than ENUM_COUNT";
+
     for (int i = 0; i < liftLevelPairs.size(); ++i)
     {
       if (liftLevelPairs.get(i).fst == liftLevel)
@@ -111,8 +121,7 @@ public class LiftSubsystem extends SubsystemBase
         return liftLevelPairs.get(i).snd.doubleValue();
       }
     }
-
-    return -1.0;
+    return Double.NaN;
   }
 
   public double getCurrentDistanceToFloor()
