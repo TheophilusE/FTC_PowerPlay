@@ -191,14 +191,14 @@ public class ManualDrive extends OpModeBase
         // If the right trigger is greater than the left trigger, it'll go up. (Ex. 1 - 0 = 1)
         // If the left trigger is greater than the right trigger, it'll go down. (Ex. 0 - 1 = -1)
         // If they are the same, it will apply zero power (Ex. 1 - 1 = 0 or 0 - 0 = 0)
-        double difference = gamepad1.right_trigger - gamepad1.left_trigger;
+        double difference = gamepad2.right_trigger - gamepad2.left_trigger;
         liftSubsystem.getLiftMotor().setPower(difference);
       }
     }
 
     // Update claw subsystem
     {
-      if (gamepad1.b)
+      if (gamepad2.b)
       {
         ClawSubsystem clawSubsystem = getComponent(ClawSubsystem.class);
         if (clawSubsystem != null)
@@ -206,7 +206,7 @@ public class ManualDrive extends OpModeBase
           clawSubsystem.setClawPosition(ClawSubsystem.ClawPosition.CLOSE);
         }
       }
-      if (gamepad1.a)
+      if (gamepad2.a)
       {
         ClawSubsystem clawSubsystem = getComponent(ClawSubsystem.class);
         if (clawSubsystem != null)
