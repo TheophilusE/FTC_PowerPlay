@@ -149,7 +149,7 @@ public class AutonomousDriveStale extends OpModeBase
 
         // Schedule command
         //schedule(new SequentialCommandGroup(
-            new FollowTrajectorySequenceCommand(driveEngine, defaultPark);
+        new FollowTrajectorySequenceCommand(driveEngine, defaultPark);
         ;
       }
       break;
@@ -200,7 +200,7 @@ public class AutonomousDriveStale extends OpModeBase
         // Build park trajectory, this is Alliance agnostic
         // The zone is always to the right of the robot
         defaultPark = driveEngine.trajectorySequenceBuilder(driveEngine.getPoseEstimate())
-            .strafeLeft(24*2)
+            .strafeLeft(24 * 2)
             .forward(5)
             .build();
 

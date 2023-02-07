@@ -10,12 +10,12 @@ import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
 import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.acmerobotics.roadrunner.util.NanoClock;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
-import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.util.RobotLog;
 
+import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.robotcore.internal.system.Misc;
-import org.firstinspires.ftc.teamcode.control.derived.DriveEngine;
+import org.firstinspires.ftc.teamcode.control.drive.SampleMecanumDrive;
 import org.firstinspires.ftc.teamcode.control.util.LoggingUtil;
 import org.firstinspires.ftc.teamcode.control.util.RegressionUtil;
 
@@ -33,8 +33,7 @@ import java.util.List;
  *      regression.
  */
 @Config
-@Disabled // Comment out to enable
-@Autonomous(name = "Automatic Feed Forward Tuner", group = "DriveTuner")
+@Autonomous(group = "drive")
 public class AutomaticFeedforwardTuner extends LinearOpMode
 {
   public static double MAX_POWER = 0.7;
@@ -49,9 +48,9 @@ public class AutomaticFeedforwardTuner extends LinearOpMode
                                  "when using the built-in drive motor velocity PID.");
     }
 
-    telemetry = new MultipleTelemetry(telemetry, FtcDashboard.getInstance().getTelemetry());
+    Telemetry telemetry = new MultipleTelemetry(this.telemetry, FtcDashboard.getInstance().getTelemetry());
 
-    DriveEngine drive = new DriveEngine(hardwareMap);
+    SampleMecanumDrive drive = new SampleMecanumDrive(hardwareMap);
 
     NanoClock clock = NanoClock.system();
 

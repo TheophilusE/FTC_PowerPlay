@@ -39,8 +39,7 @@ public class AssetsTrajectoryManager
   /**
    * Loads a trajectory config with the given name.
    */
-  public static @Nullable
-  TrajectoryConfig loadConfig(String name)
+  public static @Nullable TrajectoryConfig loadConfig(String name)
   {
     try
     {
@@ -56,8 +55,7 @@ public class AssetsTrajectoryManager
   /**
    * Loads a trajectory builder with the given name.
    */
-  public static @Nullable
-  TrajectoryBuilder loadBuilder(String name)
+  public static @Nullable TrajectoryBuilder loadBuilder(String name)
   {
     TrajectoryGroupConfig groupConfig = loadGroupConfig();
     TrajectoryConfig      config      = loadConfig(name);
@@ -71,8 +69,7 @@ public class AssetsTrajectoryManager
   /**
    * Loads a trajectory with the given name.
    */
-  public static @Nullable
-  Trajectory load(String name)
+  public static @Nullable Trajectory load(String name)
   {
     TrajectoryBuilder builder = loadBuilder(name);
     if (builder == null)

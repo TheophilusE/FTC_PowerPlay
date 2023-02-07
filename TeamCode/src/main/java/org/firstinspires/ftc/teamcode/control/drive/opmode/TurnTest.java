@@ -4,13 +4,13 @@ import com.acmerobotics.dashboard.config.Config;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
-import org.firstinspires.ftc.teamcode.control.derived.DriveEngine;
+import org.firstinspires.ftc.teamcode.control.drive.SampleMecanumDrive;
 
 /*
  * This is a simple routine to test turning capabilities.
  */
 @Config
-@Autonomous(name = "Turn Test", group = "DriveTuner")
+@Autonomous(group = "drive")
 public class TurnTest extends LinearOpMode
 {
   public static double ANGLE = 90; // deg
@@ -18,7 +18,7 @@ public class TurnTest extends LinearOpMode
   @Override
   public void runOpMode() throws InterruptedException
   {
-    DriveEngine drive = new DriveEngine(hardwareMap);
+    SampleMecanumDrive drive = new SampleMecanumDrive(hardwareMap);
 
     waitForStart();
 

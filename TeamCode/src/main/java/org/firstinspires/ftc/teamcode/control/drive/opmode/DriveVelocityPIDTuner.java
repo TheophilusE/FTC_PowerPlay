@@ -19,7 +19,8 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.RobotLog;
 
-import org.firstinspires.ftc.teamcode.control.derived.DriveEngine;
+import org.firstinspires.ftc.robotcore.external.Telemetry;
+import org.firstinspires.ftc.teamcode.control.drive.SampleMecanumDrive;
 
 import java.util.List;
 
@@ -48,7 +49,7 @@ import java.util.List;
  * Pressing B/O (Xbox/PS4) will cede control back to the tuning process.
  */
 @Config
-@Autonomous(name = "Drive Velocity PID Tuner", group = "DriveTuner")
+@Autonomous(group = "drive")
 public class DriveVelocityPIDTuner extends LinearOpMode
 {
   public static double DISTANCE = 72; // in
@@ -75,9 +76,9 @@ public class DriveVelocityPIDTuner extends LinearOpMode
                                  "PID is not in use", getClass().getSimpleName());
     }
 
-    telemetry = new MultipleTelemetry(telemetry, FtcDashboard.getInstance().getTelemetry());
+    Telemetry telemetry = new MultipleTelemetry(this.telemetry, FtcDashboard.getInstance().getTelemetry());
 
-    DriveEngine drive = new DriveEngine(hardwareMap);
+    SampleMecanumDrive drive = new SampleMecanumDrive(hardwareMap);
 
     Mode mode = Mode.TUNING_MODE;
 
