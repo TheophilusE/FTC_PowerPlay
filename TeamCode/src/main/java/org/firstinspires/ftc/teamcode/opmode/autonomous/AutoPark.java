@@ -52,7 +52,7 @@ public class AutoPark extends OpModeBase
 
     if (!Defines.FSM_STATE_OVERRIDE)
     {
-      Defines.autonomousFSM = Defines.AutonomousFSM.IDLE;
+      Defines.autonomousFSM = Defines.AutonomousFSMState.IDLE_STATE;
     }
 
     // Schedule park command

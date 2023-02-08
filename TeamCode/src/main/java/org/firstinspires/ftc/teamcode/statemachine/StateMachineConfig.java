@@ -21,7 +21,6 @@ import java.util.Map;
  */
 public class StateMachineConfig<TState, TTrigger>
 {
-
   private final Map<TState, StateRepresentation<TState, TTrigger>> stateConfiguration   = new HashMap<>();
   private final Map<TTrigger, TriggerWithParameters<TTrigger>>     triggerConfiguration = new HashMap<>();
 
@@ -179,6 +178,4 @@ public class StateMachineConfig<TState, TTrigger>
       writer.write("}");
     }
   }
-
-
 }

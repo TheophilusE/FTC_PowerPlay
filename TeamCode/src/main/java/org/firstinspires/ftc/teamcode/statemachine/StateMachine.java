@@ -23,7 +23,6 @@ import java.util.List;
  */
 public class StateMachine<S, T>
 {
-
   private static final String                   TRIGGER_IS_NULL = "trigger is null";
   protected final      StateMachineConfig<S, T> config;
   protected final      Func<S>                  stateAccessor;
