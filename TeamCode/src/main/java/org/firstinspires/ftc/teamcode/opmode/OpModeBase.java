@@ -137,7 +137,7 @@ public abstract class OpModeBase extends CommandOpMode
     telemetry.update();
 
     // Temporarily halt updates until total execution time is reached
-    long haltTime = (long)(executionsPerSecond - elapsedTime.milliseconds());
+    long haltTime = (long) (executionsPerSecond - elapsedTime.milliseconds());
 
     try
     {

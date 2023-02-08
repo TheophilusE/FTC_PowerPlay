@@ -24,6 +24,8 @@ public class ManualDrive extends OpModeBase
   public void registerAccessors()
   {
     super.registerAccessors();
+
+    // Register any motors, sensors, servos etc.
   }
 
   @Override
@@ -118,15 +120,15 @@ public class ManualDrive extends OpModeBase
       previousState = gamepad1.left_bumper && gamepad1.a;
     }
 
-    // Supply drive subsystem with human input coefficients
+    // Supply drive subsystem with human input coefficients.
     {
       DriveSubsystem driveSubsystem = getComponent(DriveSubsystem.class);
       if (driveSubsystem != null)
       {
-        // Set the current drive mode that may be updated through the dashboard
+        // Set the current drive mode that may have been updated through the dashboard.
         driveSubsystem.setDriveMode(Defines.DRIVE_MODE);
 
-        // Set movement vector from gamepad input.
+        // Set movement vector from GamePad input.
         driveSubsystem.setMovementVector(new Vector3d(gamepad1.left_stick_x, -gamepad1.left_stick_y, gamepad1.right_stick_x));
 
         // Update heading if using the IMU for the field relative drive mode.
@@ -143,7 +145,7 @@ public class ManualDrive extends OpModeBase
    */
   public void updateAccessors()
   {
-    // Update drive coefficient through the Gamepad.
+    // Update drive coefficient through the GamePad.
     {
       // Speed limiter accessor update
       if (!gamepad1.left_bumper)
@@ -206,6 +208,7 @@ public class ManualDrive extends OpModeBase
           clawSubsystem.setClawPosition(ClawSubsystem.ClawPosition.CLOSE);
         }
       }
+
       if (gamepad2.a)
       {
         ClawSubsystem clawSubsystem = getComponent(ClawSubsystem.class);

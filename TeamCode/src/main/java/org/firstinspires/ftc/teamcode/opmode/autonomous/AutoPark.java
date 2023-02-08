@@ -65,7 +65,6 @@ public class AutoPark extends OpModeBase
         // A simple strafe to the right will do
         defaultPark = driveEngine.trajectorySequenceBuilder(driveEngine.getPoseEstimate())
             .strafeRight(60)
-            .forward(60)
             .build();
 
       } else
