@@ -33,7 +33,7 @@ public class ManualDrive extends OpModeBase
   {
     super.registerSubsystems();
 
-    AutonomousUtils.InitializeHeading();
+    AutonomousUtils.Initialize();
 
     // Register Drive Subsystem
     {

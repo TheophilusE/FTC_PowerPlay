@@ -18,7 +18,7 @@ public class LiftTest extends OpModeBase
   {
     super.initialize();
 
-    AutonomousUtils.InitializeHeading();
+    AutonomousUtils.Initialize();
   }
 
   @Override

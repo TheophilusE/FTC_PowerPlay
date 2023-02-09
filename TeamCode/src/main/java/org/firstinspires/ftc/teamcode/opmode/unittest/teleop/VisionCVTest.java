@@ -14,7 +14,7 @@ public class VisionCVTest extends OpModeBase
   {
     super.initialize();
 
-    AutonomousUtils.InitializeHeading();
+    AutonomousUtils.Initialize();
   }
 
   @Override

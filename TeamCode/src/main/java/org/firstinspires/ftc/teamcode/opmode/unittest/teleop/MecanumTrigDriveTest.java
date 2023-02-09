@@ -14,7 +14,7 @@ public class MecanumTrigDriveTest extends OpModeBase
   {
     super.initialize();
 
-    AutonomousUtils.InitializeHeading();
+    AutonomousUtils.Initialize();
   }
 
   @Override

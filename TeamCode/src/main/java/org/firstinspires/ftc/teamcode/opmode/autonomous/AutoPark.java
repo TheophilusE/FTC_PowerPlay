@@ -22,7 +22,7 @@ public class AutoPark extends OpModeBase
   {
     super.registerSubsystems();
 
-    AutonomousUtils.InitializeHeading();
+    AutonomousUtils.Initialize();
 
     // Register Lift Subsystem
     {
@@ -52,7 +52,7 @@ public class AutoPark extends OpModeBase
 
     if (!Defines.FSM_STATE_OVERRIDE)
     {
-      Defines.autonomousFSM = Defines.AutonomousFSMState.IDLE_STATE;
+      Defines.autonomousFSMState = Defines.AutonomousFSMState.IDLE_STATE;
     }
 
     // Schedule park command
