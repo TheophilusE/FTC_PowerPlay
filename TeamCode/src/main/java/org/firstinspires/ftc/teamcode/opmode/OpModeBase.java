@@ -139,15 +139,18 @@ public abstract class OpModeBase extends CommandOpMode
     // Temporarily halt updates until total execution time is reached
     long haltTime = (long) (executionsPerSecond - elapsedTime.milliseconds());
 
-    try
+    if (haltTime > 0)
     {
-      Thread.sleep(haltTime);
-    } catch (InterruptedException e)
-    {
-      telemetry.addData("Failed to pause execution with time", e.getMessage());
-      telemetry.update();
+      try
+      {
+        Thread.sleep(haltTime);
+      } catch (InterruptedException e)
+      {
+        telemetry.addData("Failed to pause execution with time", e.getMessage());
+        telemetry.update();
 
-      Thread.currentThread().interrupt();
+        Thread.currentThread().interrupt();
+      }
     }
 
     // Prepare counter for next execution.
