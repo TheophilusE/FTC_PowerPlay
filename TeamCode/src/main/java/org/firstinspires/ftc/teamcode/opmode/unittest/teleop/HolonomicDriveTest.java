@@ -14,7 +14,7 @@ public class HolonomicDriveTest extends OpModeBase
   {
     super.initialize();
 
-    AutonomousUtils.InitializeHeading();
+    AutonomousUtils.Initialize();
   }
 
   @Override

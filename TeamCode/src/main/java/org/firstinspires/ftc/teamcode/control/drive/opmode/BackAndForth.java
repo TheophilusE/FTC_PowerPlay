@@ -25,9 +25,10 @@ import org.firstinspires.ftc.teamcode.control.derived.DriveEngine;
  * is recommended that you use the FollowerPIDTuner opmode for further fine tuning.
  */
 @Config
-@Autonomous(name = "Back and Forth", group = "DriveTuner")
+@Autonomous(group = "drive")
 public class BackAndForth extends LinearOpMode
 {
+
   public static double DISTANCE = 50;
 
   @Override

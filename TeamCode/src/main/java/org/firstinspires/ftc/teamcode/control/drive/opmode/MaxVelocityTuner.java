@@ -10,6 +10,7 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.VoltageSensor;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
+import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.control.derived.DriveEngine;
 import org.firstinspires.ftc.teamcode.control.drive.DriveConstants;
 
@@ -24,7 +25,7 @@ import java.util.Objects;
  * Further fine tuning of kF may be desired.
  */
 @Config
-@Autonomous(name = "Max Velocity Tuner", group = "DriveTuner")
+@Autonomous(group = "drive")
 public class MaxVelocityTuner extends LinearOpMode
 {
   public static double RUNTIME = 2.0;
@@ -43,7 +44,7 @@ public class MaxVelocityTuner extends LinearOpMode
 
     batteryVoltageSensor = hardwareMap.voltageSensor.iterator().next();
 
-    telemetry = new MultipleTelemetry(telemetry, FtcDashboard.getInstance().getTelemetry());
+    Telemetry telemetry = new MultipleTelemetry(this.telemetry, FtcDashboard.getInstance().getTelemetry());
 
     telemetry.addLine("Your bot will go at full speed for " + RUNTIME + " seconds.");
     telemetry.addLine("Please ensure you have enough space cleared.");
@@ -73,6 +74,7 @@ public class MaxVelocityTuner extends LinearOpMode
     double effectiveKf = DriveConstants.getMotorVelocityF(veloInchesToTicks(maxVelocity));
 
     telemetry.addData("Max Velocity", maxVelocity);
+    telemetry.addData("Max Recommended Velocity", maxVelocity * 0.8);
     telemetry.addData("Voltage Compensated kF", effectiveKf * batteryVoltageSensor.getVoltage() / 12);
     telemetry.update();
 

@@ -36,7 +36,7 @@ public class AutoTest extends OpModeBase
   {
     super.initialize();
 
-    AutonomousUtils.InitializeHeading();
+    AutonomousUtils.Initialize();
 
     // Reset timer
     elapsedTime.reset();

@@ -11,7 +11,7 @@ import org.firstinspires.ftc.teamcode.control.derived.DriveEngine;
 /*
  * This is an example of a more complex path to really test the tuning.
  */
-@Autonomous(name = "Spline Test", group = "DriveTuner")
+@Autonomous(group = "drive")
 public class SplineTest extends LinearOpMode
 {
   @Override

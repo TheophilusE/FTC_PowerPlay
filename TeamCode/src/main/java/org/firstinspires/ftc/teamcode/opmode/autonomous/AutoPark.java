@@ -22,7 +22,7 @@ public class AutoPark extends OpModeBase
   {
     super.registerSubsystems();
 
-    AutonomousUtils.InitializeHeading();
+    AutonomousUtils.Initialize();
 
     // Register Lift Subsystem
     {
@@ -52,7 +52,7 @@ public class AutoPark extends OpModeBase
 
     if (!Defines.FSM_STATE_OVERRIDE)
     {
-      Defines.autonomousFSM = Defines.AutonomousFSM.IDLE;
+      Defines.autonomousFSMState = Defines.AutonomousFSMState.IDLE_STATE;
     }
 
     // Schedule park command
@@ -65,7 +65,6 @@ public class AutoPark extends OpModeBase
         // A simple strafe to the right will do
         defaultPark = driveEngine.trajectorySequenceBuilder(driveEngine.getPoseEstimate())
             .strafeRight(60)
-            .forward(60)
             .build();
 
       } else

@@ -11,8 +11,13 @@ import org.firstinspires.ftc.teamcode.opmode.Defines;
  */
 public final class AutonomousUtils
 {
-  public static void InitializeHeading()
+  public static void Initialize()
   {
+    if (!Defines.FSM_STATE_OVERRIDE)
+    {
+      Defines.autonomousFSMState = Defines.AutonomousFSMState.IDLE_STATE;
+    }
+
     Defines.START_POSE = new Pose2d(6, BLUE_ALLIANCE ? 63 : -63,
                                     Math.toRadians(BLUE_ALLIANCE ? -90 : 90));
   }

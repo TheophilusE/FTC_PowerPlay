@@ -14,7 +14,7 @@ import org.firstinspires.ftc.teamcode.control.derived.DriveEngine;
  * exercise is to ascertain whether the localizer has been configured properly (note: the pure
  * encoder localizer heading may be significantly off if the track width has not been tuned).
  */
-@TeleOp(name = "Localization Test", group = "DriveTuner")
+@TeleOp(group = "drive")
 public class LocalizationTest extends LinearOpMode
 {
   @Override

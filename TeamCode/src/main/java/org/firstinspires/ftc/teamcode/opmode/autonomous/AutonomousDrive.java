@@ -12,6 +12,8 @@ import org.firstinspires.ftc.teamcode.hardware.subsystems.LiftSubsystem;
 import org.firstinspires.ftc.teamcode.hardware.subsystems.VisionCVSubsystem;
 import org.firstinspires.ftc.teamcode.opmode.Defines;
 import org.firstinspires.ftc.teamcode.opmode.OpModeBase;
+import org.firstinspires.ftc.teamcode.statemachine.StateMachine;
+import org.firstinspires.ftc.teamcode.statemachine.StateMachineConfig;
 
 /*
  * This class houses the main autonomous program that enables full functionality.
@@ -26,24 +28,43 @@ import org.firstinspires.ftc.teamcode.opmode.OpModeBase;
 @Autonomous(name = "Autonomous Drive", group = "Autonomous")
 public class AutonomousDrive extends OpModeBase
 {
-  /// Timers
-  private ElapsedTime idleElapsedTime = new ElapsedTime();
-
-  double maxIdleTime = 5.0;
+  /// State Machine Manager
+  StateMachine<Defines.AutonomousFSMState, Defines.AutonomousFSMTrigger>       m_StateMachine;
+  StateMachineConfig<Defines.AutonomousFSMState, Defines.AutonomousFSMTrigger> m_StateMachineConfig;
 
   @Override
   public void initialize()
   {
     super.initialize();
 
-    AutonomousUtils.InitializeHeading();
+    AutonomousUtils.Initialize();
 
-    if (!Defines.FSM_STATE_OVERRIDE)
+    // Configure autonomous states.
     {
-      Defines.autonomousFSM = Defines.AutonomousFSM.IDLE;
-    }
+      m_StateMachineConfig = new StateMachineConfig<>();
 
-    idleElapsedTime.reset();
+      // If we are currently idling, switch to the evaluate vision state.
+      m_StateMachineConfig.configure(Defines.AutonomousFSMState.IDLE_STATE)
+          .onEntry(this::enterIdleState)
+          .permit(Defines.AutonomousFSMTrigger.IDLING, Defines.AutonomousFSMState.EVALUATE_VISION);
+
+      // When evaluating vision, if a valid park zone is detected immediately perform park in target
+      // zone. If not found, try to get a valid target and switch to default park if not found.
+      m_StateMachineConfig.configure(Defines.AutonomousFSMState.EVALUATE_VISION)
+          .onEntry(this::evaluateVision)
+          .permit(Defines.AutonomousFSMTrigger.NO_PARK_SIGNAL_FOUND, Defines.AutonomousFSMState.DEFAULT_PARK)
+          .permit(Defines.AutonomousFSMTrigger.VALID_PARK_SIGNAL_FOUND, Defines.AutonomousFSMState.PARK_IN_SIGNAL_ZONE);
+
+      // If in default park state, schedule the park command in the default park zone.
+      m_StateMachineConfig.configure(Defines.AutonomousFSMState.DEFAULT_PARK)
+          .onEntry(this::scheduleAutonomousTrajectoryDefaultPark);
+
+      // If a valid park signal is found, schedule a park command based on the target signal.
+      m_StateMachineConfig.configure(Defines.AutonomousFSMState.PARK_IN_SIGNAL_ZONE)
+          .onEntry(this::scheduleAutonomousParkSignalTrajectory);
+
+      m_StateMachine = new StateMachine<>(Defines.autonomousFSMState, m_StateMachineConfig);
+    }
   }
 
   @Override
@@ -75,83 +96,71 @@ public class AutonomousDrive extends OpModeBase
   @Override
   public void update()
   {
-    // Update Finite State Machine
-    updateFSM(Defines.autonomousFSM);
   }
 
-  public void updateFSM(Defines.AutonomousFSM state)
+  public void enterIdleState()
   {
-    switch (state)
+    // Ensure that we are not moving in idle state.
+    driveEngine.setZeroPower();
+
+    if (getVisionState() == Defines.ParkTargetSignal.SIGNAL_NONE)
     {
-      case IDLE:
-      {
-        // Evaluate Vision state after the max idle time or we have found a suitable target signal
-        if (idleElapsedTime.seconds() > maxIdleTime || getVisionState() != Defines.ParkTargetSignal.SIGNAL_NONE)
-        {
-          Defines.autonomousFSM = Defines.AutonomousFSM.EVALUATE_VISION;
-          return;
-        }
+      ElapsedTime waitTime    = new ElapsedTime();
+      double      maxWaitTime = 5000; // Milliseconds
 
-        // Ensure that we are not moving in the idle state.
-        driveEngine.setZeroPower();
-      }
-      break;
-
-      case EVALUATE_VISION:
+      while (waitTime.milliseconds() < maxWaitTime && getVisionState() == Defines.ParkTargetSignal.SIGNAL_NONE)
       {
-        /// Build trajectory and schedule the command
-        Defines.ParkTargetSignal signalState = getVisionState();
-        scheduleAutonomousTrajectory(signalState);
+        // Hold here and wait for the vision subsystem to detect a park signal within the given time
+        // In milliseconds. The default park will be used if no signal detected.
       }
-      break;
+    }
+
+    m_StateMachine.fire(Defines.AutonomousFSMTrigger.IDLING);
+  }
+
+  public void evaluateVision()
+  {
+    if (getVisionState() != Defines.ParkTargetSignal.SIGNAL_NONE)
+    {
+      m_StateMachine.fire(Defines.AutonomousFSMTrigger.VALID_PARK_SIGNAL_FOUND);
+    } else
+    {
+      m_StateMachine.fire(Defines.AutonomousFSMTrigger.NO_PARK_SIGNAL_FOUND);
     }
   }
 
-  Defines.ParkTargetSignal getVisionState()
+  public void scheduleAutonomousTrajectoryDefaultPark()
   {
-    Defines.ParkTargetSignal result = Defines.ParkTargetSignal.SIGNAL_NONE;
+    TrajectorySequence defaultPark = null;
 
-    VisionCVSubsystem visionCVSubsystem = getComponent(VisionCVSubsystem.class);
-    if (visionCVSubsystem != null)
+    // Build park trajectory
+    if (Defines.BLUE_ALLIANCE)
     {
-      result = visionCVSubsystem.getTargetSignal();
+      // A simple strafe to the right will do
+      defaultPark = driveEngine.trajectorySequenceBuilder(driveEngine.getPoseEstimate())
+          .strafeRight(24 * 4)
+          .build();
+
+    } else
+    {
+      // A simple strafe to the left will do
+      defaultPark = driveEngine.trajectorySequenceBuilder(driveEngine.getPoseEstimate())
+          .strafeLeft(24 * 4)
+          .build();
     }
 
-    return result;
+    // Schedule command
+    schedule(new SequentialCommandGroup(
+        new FollowTrajectorySequenceCommand(driveEngine, defaultPark)
+    ));
   }
 
-  public void scheduleAutonomousTrajectory(Defines.ParkTargetSignal parkTargetSignal)
+  public void scheduleAutonomousParkSignalTrajectory()
   {
+    Defines.ParkTargetSignal parkTargetSignal = getVisionState();
+
     switch (parkTargetSignal)
     {
-      /// Default park
-      case SIGNAL_NONE:
-      {
-        TrajectorySequence defaultPark = null;
-
-        // Build park trajectory
-        if (Defines.BLUE_ALLIANCE)
-        {
-          // A simple strafe to the right will do
-          defaultPark = driveEngine.trajectorySequenceBuilder(driveEngine.getPoseEstimate())
-              .strafeRight(24 * 4)
-              .build();
-
-        } else
-        {
-          // A simple strafe to the left will do
-          defaultPark = driveEngine.trajectorySequenceBuilder(driveEngine.getPoseEstimate())
-              .strafeLeft(24 * 4)
-              .build();
-        }
-
-        // Schedule command
-        schedule(new SequentialCommandGroup(
-            new FollowTrajectorySequenceCommand(driveEngine, defaultPark)
-        ));
-      }
-      break;
-
       /// Park in the leftward zone
       case SIGNAL_ONE:
       {
@@ -207,6 +216,25 @@ public class AutonomousDrive extends OpModeBase
         ));
       }
       break;
+
+      default:
+      {
+        telemetry.addData("> ", parkTargetSignal.toString() + " Is unhandled by the method.");
+      }
+      break;
     }
+  }
+
+  Defines.ParkTargetSignal getVisionState()
+  {
+    Defines.ParkTargetSignal result = Defines.ParkTargetSignal.SIGNAL_NONE;
+
+    VisionCVSubsystem visionCVSubsystem = getComponent(VisionCVSubsystem.class);
+    if (visionCVSubsystem != null)
+    {
+      result = visionCVSubsystem.getTargetSignal();
+    }
+
+    return result;
   }
 }

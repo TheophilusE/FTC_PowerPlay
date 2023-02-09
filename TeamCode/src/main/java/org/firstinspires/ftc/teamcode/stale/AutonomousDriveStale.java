@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.opmode.autonomous;
+package org.firstinspires.ftc.teamcode.stale;
 
 import com.acmerobotics.dashboard.config.Config;
 import com.arcrobotics.ftclib.command.SequentialCommandGroup;
@@ -38,11 +38,11 @@ public class AutonomousDriveStale extends OpModeBase
   {
     super.initialize();
 
-    AutonomousUtils.InitializeHeading();
+    AutonomousUtils.Initialize();
 
     if (!Defines.FSM_STATE_OVERRIDE)
     {
-      Defines.autonomousFSM = Defines.AutonomousFSM.IDLE;
+      Defines.autonomousFSMState = Defines.AutonomousFSMState.IDLE_STATE;
     }
 
     idleElapsedTime.reset();
@@ -78,19 +78,19 @@ public class AutonomousDriveStale extends OpModeBase
   public void update()
   {
     // Update Finite State Machine
-    updateFSM(Defines.autonomousFSM);
+    updateFSM(Defines.autonomousFSMState);
   }
 
-  public void updateFSM(Defines.AutonomousFSM state)
+  public void updateFSM(Defines.AutonomousFSMState state)
   {
     switch (state)
     {
-      case IDLE:
+      case IDLE_STATE:
       {
         // Evaluate Vision state after the max idle time or we have found a suitable target signal
         if (idleElapsedTime.seconds() > maxIdleTime || getVisionState() != Defines.ParkTargetSignal.SIGNAL_NONE)
         {
-          Defines.autonomousFSM = Defines.AutonomousFSM.EVALUATE_VISION;
+          Defines.autonomousFSMState = Defines.AutonomousFSMState.EVALUATE_VISION;
           return;
         }
 
@@ -149,7 +149,7 @@ public class AutonomousDriveStale extends OpModeBase
 
         // Schedule command
         //schedule(new SequentialCommandGroup(
-            new FollowTrajectorySequenceCommand(driveEngine, defaultPark);
+        new FollowTrajectorySequenceCommand(driveEngine, defaultPark);
         ;
       }
       break;
@@ -200,7 +200,7 @@ public class AutonomousDriveStale extends OpModeBase
         // Build park trajectory, this is Alliance agnostic
         // The zone is always to the right of the robot
         defaultPark = driveEngine.trajectorySequenceBuilder(driveEngine.getPoseEstimate())
-            .strafeLeft(24*2)
+            .strafeLeft(24 * 2)
             .forward(5)
             .build();
 

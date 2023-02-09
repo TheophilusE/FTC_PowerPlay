@@ -48,8 +48,8 @@ public class ClawSubsystem extends SubsystemBase
     servoRight = hardwareMap.get(Servo.class, rightClawName);
 
     // TODO: Fill claw positions
-    clawPositionPairs.add(new Pair<ClawPosition, double[]>(ClawPosition.CLOSE, new double[]{1.0, 1.0}));
-    clawPositionPairs.add(new Pair<ClawPosition, double[]>(ClawPosition.OPEN, new double[]{0.0, 0.0}));
+    clawPositionPairs.add(new Pair<ClawPosition, double[]>(ClawPosition.CLOSE, new double[]{0.0, 1.0}));
+    clawPositionPairs.add(new Pair<ClawPosition, double[]>(ClawPosition.OPEN, new double[]{1.0, 0.0}));
   }
 
   @Override

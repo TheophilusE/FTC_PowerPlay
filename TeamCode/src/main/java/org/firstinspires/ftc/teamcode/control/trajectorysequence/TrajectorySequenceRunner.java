@@ -21,6 +21,7 @@ import org.firstinspires.ftc.teamcode.control.trajectorysequence.sequencesegment
 import org.firstinspires.ftc.teamcode.control.trajectorysequence.sequencesegment.TurnSegment;
 import org.firstinspires.ftc.teamcode.control.trajectorysequence.sequencesegment.WaitSegment;
 import org.firstinspires.ftc.teamcode.control.util.DashboardUtil;
+import org.firstinspires.ftc.teamcode.control.util.LogFiles;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -204,6 +205,12 @@ public class TrajectorySequenceRunner
     if (POSE_HISTORY_LIMIT > -1 && poseHistory.size() > POSE_HISTORY_LIMIT)
     {
       poseHistory.removeFirst();
+    }
+
+    if (targetPose != null)
+    {
+      LogFiles.recordPose(poseEstimate);
+      LogFiles.recordTargetPose(targetPose);
     }
 
     packet.put("x", poseEstimate.getX());

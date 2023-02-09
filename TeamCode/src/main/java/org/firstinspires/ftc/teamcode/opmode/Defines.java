@@ -26,7 +26,7 @@ public final class Defines
 
   /// Drive Coefficient. This defines the scale factor [0.0, 1.0] of which to scale the drive
   /// Output Power.
-  public static float DRIVE_COEFFICIENT = 1.0f;
+  public static float DRIVE_COEFFICIENT = 0.7f;
 
   /*
    * Enumeration of all supported drive modes. This defines the way the robot is handled.
@@ -61,19 +61,47 @@ public final class Defines
    * This is a Finite State Machine (FSM) that can be used to procure dynamic autonomous logic,
    * where it's behaviour is based on what state the controller is.
    */
-  public enum AutonomousFSM
+  public enum AutonomousFSMState
   {
-    /// Idle state in the controller.
-    IDLE,
+    /// Idle State.
+    IDLE_STATE,
 
-    /// Indicates that the controller should move to a position.
-    MOVE_TO_POSITION,
+    /// Finished State.
+    FINISHED_TASKS,
 
-    /// Indicates that the controller should align its heading.
-    ALIGN_HEADING,
-
-    /// Indicates that the controller should process logic through its vision subsystem.
+    /// Evaluate vision processing through the Vision Subsystem.
     EVALUATE_VISION,
+
+    /// Performs a simple park in the park zone.
+    DEFAULT_PARK,
+
+    /// Perform a park in the correct signal zone.
+    PARK_IN_SIGNAL_ZONE,
+
+    /// Deliver one cone and perform a park in the correct signal zone.
+    PARK_IN_SIGNAL_ZONE_DELIVER_ONE_CONE,
+
+    /// Deliver two cone and perform a park in the correct signal zone.
+    PARK_IN_SIGNAL_ZONE_DELIVER_TWO_CONE,
+
+    ENUM_COUNT
+  }
+
+  /*
+   * Enumeration of all state triggers used used for autonomous logic and processing.
+   *
+   * These are various conditions that the controller may have at any given moment.
+   */
+  public enum AutonomousFSMTrigger
+  {
+    /// Idling
+    IDLING,
+
+    /// No valid park signal detected.
+    NO_PARK_SIGNAL_FOUND,
+
+    /// Valid park signal detected.
+    VALID_PARK_SIGNAL_FOUND,
 
     ENUM_COUNT
   }
@@ -82,7 +110,7 @@ public final class Defines
   public static boolean FSM_STATE_OVERRIDE = false;
 
   /// Stores the global autonomous state.
-  public static AutonomousFSM autonomousFSM = AutonomousFSM.IDLE;
+  public static AutonomousFSMState autonomousFSMState = AutonomousFSMState.IDLE_STATE;
 
   /// Enable / Disable Camera Stream to the Dashboard.
   public static boolean ENABLE_CAMERA_STREAM = true;

@@ -42,11 +42,14 @@ public abstract class OpModeBase extends CommandOpMode
   @Override
   public void initialize()
   {
+    // Set default maximum number of executions.
+    setExecutionsPerSecond(60);
+
     {
       telemetry.addLine("> Reset Command Scheduler...");
       telemetry.update();
 
-      // Clear any previous states
+      // Clear any previous states.
       reset();
     }
 
@@ -54,7 +57,7 @@ public abstract class OpModeBase extends CommandOpMode
       telemetry.addLine("> Schedule Bulk Cache Command...");
       telemetry.update();
 
-      // Clear the bulk cache command every iteration
+      // Clear the bulk cache command every iteration.
       schedule(new BulkCacheCommand(hardwareMap));
     }
 
@@ -79,11 +82,7 @@ public abstract class OpModeBase extends CommandOpMode
       registerSubsystems();
     }
 
-    // Instantiate a new elapsed time object.
-    if (elapsedTime == null)
-    {
-      elapsedTime = new ElapsedTime();
-    }
+    elapsedTime = new ElapsedTime();
 
     telemetry.addLine("> Ready for Start.");
     telemetry.update();
@@ -135,15 +134,27 @@ public abstract class OpModeBase extends CommandOpMode
 
     update();
 
+    telemetry.update();
+
     // Temporarily halt updates until total execution time is reached
-    while (elapsedTime.milliseconds() < executionsPerSecond)
+    long haltTime = (long) (executionsPerSecond - elapsedTime.milliseconds());
+
+    if (haltTime > 0)
     {
+      try
+      {
+        Thread.sleep(haltTime);
+      } catch (InterruptedException e)
+      {
+        telemetry.addData("Failed to pause execution with time", e.getMessage());
+        telemetry.update();
+
+        Thread.currentThread().interrupt();
+      }
     }
 
     // Prepare counter for next execution.
     elapsedTime.reset();
-
-    telemetry.update();
   }
 
   /*
@@ -163,7 +174,7 @@ public abstract class OpModeBase extends CommandOpMode
     }
   }
 
-  /* Sets the number of executions per second. */
+  /* Sets the maximum number of executions per second. */
   public void setExecutionsPerSecond(double executionsPerSecond)
   {
     this.executionsPerSecond = 1.0 / executionsPerSecond;
@@ -243,34 +254,45 @@ public abstract class OpModeBase extends CommandOpMode
    * </p>
    *
    * <pre>
-   * public interface CollisionHandler {
-   *     public void handleCollision();
+   * public class Foo extends OpModeBase
+   * {
+   *    int counter = 0;
+   *
+   *    Override
+   *    public void initialize()
+   *    {
+   *      super.initialize();
+   *
+   *      AutonomousUtils.InitializeHeading();
+   *    }
+   *
+   *    Override
+   *    public void registerSubsystems()
+   *    {
+   *      super.registerSubsystems();
+   *
+   *      // Register Example Subsystem
+   *      {
+   *        ExampleSubsystem exampleSubsystem = new ExampleSubsystem();
+   *        addSubsystem(exampleSubsystem);
+   *      }
+   *    }
+   *
+   *    Override
+   *    public void update()
+   *    {
+   *      ++counter;
+   *
+   *      // Retrieve and Update Example Subsystem
+   *      {
+   *        ExampleSubsystem exampleSubsystem = getComponent(ExampleSubsystem.class);
+   *        if (exampleSubsystem != null)
+   *        {
+   *          exampleSubsystem.setCurrentCounter(counter);
+   *        }
+   *      }
+   *    }
    * }
-   *
-   * public class Foo extends Component implements CollisionHandler {
-   *
-   *     public void handleCollision() {
-   *         //...
-   *     }
-   *
-   *     public void doSomething() {
-   *         //...
-   *     }
-   *
-   *     //...
-   * }
-   *
-   * Entity bar = getEntityFromSomeWhere();
-   * bar.addComponent(new Foo());
-   * //..
-   *
-   * // Invoke collision handling without knowing about Foo
-   * bar.getComponent(CollisionHandler.class).handleCollision();
-   * //..
-   *
-   * // Retrieve subsystem Foo
-   * Foo foo = opmode.getComponent(Foo.class);
-   * foo.doSomething();
    * </pre>
    *
    * @param <T>      type parameter used to avoid casts, irrelevant when calling
@@ -296,8 +318,7 @@ public abstract class OpModeBase extends CommandOpMode
         return classRef.cast(system);
       }
     }
-    throw new IllegalArgumentException("Subsystem not found "
-                                       + classRef.getName());
+    throw new IllegalArgumentException("Subsystem not found " + classRef.getName());
   }
 
   /**
@@ -329,8 +350,8 @@ public abstract class OpModeBase extends CommandOpMode
   }
 
   /**
-   * Adds the specified subsystem to this opmode. Subsystem cannot be added if
-   * this subsystem already exists in this opmode.
+   * Adds the specified subsystem to this OpMode. Subsystem cannot be added if
+   * this subsystem already exists in this OpMode.
    *
    * @param system the component to be added
    */
@@ -340,8 +361,7 @@ public abstract class OpModeBase extends CommandOpMode
     {
       if (s == system)
       {
-        throw new IllegalArgumentException(
-            "Subsystem already added to OpMode");
+        throw new IllegalArgumentException("Subsystem already added to OpMode");
       }
     }
 

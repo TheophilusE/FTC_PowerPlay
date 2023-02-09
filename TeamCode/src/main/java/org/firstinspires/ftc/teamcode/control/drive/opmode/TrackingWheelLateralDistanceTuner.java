@@ -3,7 +3,6 @@ package org.firstinspires.ftc.teamcode.control.drive.opmode;
 import com.acmerobotics.dashboard.config.Config;
 import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.acmerobotics.roadrunner.util.Angle;
-import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.util.RobotLog;
@@ -63,8 +62,7 @@ import org.firstinspires.ftc.teamcode.control.drive.StandardTrackingWheelLocaliz
  * precision. The heading should still line up.
  */
 @Config
-@Disabled // Comment out to enable
-@TeleOp(name = "Traking Wheel Lateral Distance Tuner", group = "DriveTuner")
+@TeleOp(group = "drive")
 public class TrackingWheelLateralDistanceTuner extends LinearOpMode
 {
   public static int NUM_TURNS = 10;

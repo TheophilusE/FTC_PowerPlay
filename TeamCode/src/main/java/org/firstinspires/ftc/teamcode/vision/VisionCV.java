@@ -62,17 +62,17 @@ public class VisionCV
 
   public void update(Telemetry telemetry)
   {
-    telemetry.addData("Frame Count", webcam.getFrameCount());
-    telemetry.addData("FPS", String.format("%.2f", webcam.getFps()));
-    telemetry.addData("Total frame time ms", webcam.getTotalFrameTimeMs());
-    telemetry.addData("Pipeline time ms", webcam.getPipelineTimeMs());
-    telemetry.addData("Overhead time ms", webcam.getOverheadTimeMs());
-    telemetry.addData("Theoretical max FPS", webcam.getCurrentPipelineMaxFps());
+    telemetry.addData("> Frame Count", webcam.getFrameCount());
+    telemetry.addData("> FPS", String.format("%.2f", webcam.getFps()));
+    telemetry.addData("> Total frame time ms", webcam.getTotalFrameTimeMs());
+    telemetry.addData("> Pipeline time ms", webcam.getPipelineTimeMs());
+    telemetry.addData("> Overhead time ms", webcam.getOverheadTimeMs());
+    telemetry.addData("> Theoretical max FPS", webcam.getCurrentPipelineMaxFps());
 
-    telemetry.addData("YCrCb Final Color", String.format("Y: %.2f, Cr: %.2f, Cb: %.2f", pipeline.yCrCbFinalColor.x, pipeline.yCrCbFinalColor.y, pipeline.yCrCbFinalColor.z));
-    telemetry.addData("RGB Final Color", String.format("Y: %.2f, Cr: %.2f, Cb: %.2f", pipeline.rgbFinalColor.x, pipeline.rgbFinalColor.y, pipeline.rgbFinalColor.z));
+    telemetry.addData("> YCrCb Final Color", String.format("Y: %.2f, Cr: %.2f, Cb: %.2f", pipeline.yCrCbFinalColor.x, pipeline.yCrCbFinalColor.y, pipeline.yCrCbFinalColor.z));
+    telemetry.addData("> RGB Final Color", String.format("Y: %.2f, Cr: %.2f, Cb: %.2f", pipeline.rgbFinalColor.x, pipeline.rgbFinalColor.y, pipeline.rgbFinalColor.z));
 
-    telemetry.addData("Current Target Signal", pipeline.getTargetSignal());
+    telemetry.addData("> Current Target Signal", pipeline.getTargetSignal());
   }
 
   public int shutDown()
