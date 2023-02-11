@@ -23,25 +23,25 @@ public class DriveSubsystem extends SubsystemBase
   protected Defines.DriveMode m_driveMode;
   protected Vector3d          m_movementVector;
   protected Telemetry         m_telemetry;
-  protected double            m_heading;
+  protected double            m_robotAngleOffset;
 
   // Construct
   public DriveSubsystem(DriveEngine driveEngine, Telemetry telemetry)
   {
-    m_driveEngine    = driveEngine;
-    m_driveMode      = Defines.DriveMode.NONE;
-    m_telemetry      = telemetry;
-    m_movementVector = new Vector3d();
-    m_heading        = 0.0;
+    m_driveEngine      = driveEngine;
+    m_driveMode        = Defines.DriveMode.NONE;
+    m_telemetry        = telemetry;
+    m_movementVector   = new Vector3d();
+    m_robotAngleOffset = 0.0;
   }
 
   public DriveSubsystem(DriveEngine driveEngine, Telemetry telemetry, Defines.DriveMode driveMode)
   {
-    m_driveEngine    = driveEngine;
-    m_driveMode      = driveMode;
-    m_telemetry      = telemetry;
-    m_movementVector = new Vector3d();
-    m_heading        = 0.0;
+    m_driveEngine      = driveEngine;
+    m_driveMode        = driveMode;
+    m_telemetry        = telemetry;
+    m_movementVector   = new Vector3d();
+    m_robotAngleOffset = 0.0;
   }
 
   @Override
@@ -93,7 +93,7 @@ public class DriveSubsystem extends SubsystemBase
 
   public void setHeading(double heading)
   {
-    m_heading = heading;
+    m_robotAngleOffset = heading;
   }
 
   protected void updateMovementStateDifferentialRC()
@@ -198,7 +198,7 @@ public class DriveSubsystem extends SubsystemBase
 
   protected void updateMovementStateIMUFC()
   {
-    double heading = m_driveEngine.getHeadingOffset(m_heading);
+    double heading = m_driveEngine.getHeadingOffset(m_robotAngleOffset);
 
     double y  = (Math.abs(m_movementVector.y) > 0.05) ? Extensions.cubeInput(m_movementVector.y, 0.4) : 0.0;
     double x  = (Math.abs(m_movementVector.x) > 0.05) ? Extensions.cubeInput(m_movementVector.x, 0.4) : 0.0;
@@ -260,7 +260,12 @@ public class DriveSubsystem extends SubsystemBase
     m_telemetry.addData("> ", " Rotation: (%.2f)", rotation);
 
     m_telemetry.addLine("> Press the left bumper to re-zero the heading.");
-    m_telemetry.addData("> Current Heading with offset", AngleUnit.DEGREES.fromRadians(m_driveEngine.getHeadingOffset(m_heading)));
-    m_telemetry.addData("> Offset", AngleUnit.DEGREES.fromRadians(m_heading));
+    m_telemetry.addData("> Current Heading with offset", AngleUnit.DEGREES.fromRadians(m_driveEngine.getHeadingOffset(m_robotAngleOffset)));
+    m_telemetry.addData("> Offset", AngleUnit.DEGREES.fromRadians(m_robotAngleOffset));
+  }
+
+  public double getCurrentHeadingOffset()
+  {
+    return m_robotAngleOffset;
   }
 }

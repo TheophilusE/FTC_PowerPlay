@@ -17,7 +17,6 @@ public abstract class OpModeBase extends CommandOpMode
   // Tracked Variables
   private   ElapsedTime elapsedTime         = null;
   private   double      executionsPerSecond = 1.0 / 60.0;
-  protected double      robotAngleOffset    = 0;
   protected boolean     previousState       = false;
 
   // Engine Core
@@ -99,21 +98,21 @@ public abstract class OpModeBase extends CommandOpMode
 
     switch (Defines.DRIVE_MODE)
     {
-      case FIELD_CENTRIC_IMU:
-      {
-        while (!isStarted() && !isStopRequested())
-        {
-          telemetry.addLine("> Current offset is " + robotAngleOffset);
-          telemetry.addLine("> Press left bumper to reset to current heading");
-          telemetry.update();
-
-          if (gamepad1.left_bumper)
-          {
-            robotAngleOffset = driveEngine.getHeadingOffset(robotAngleOffset);
-          }
-        }
-      }
-      break;
+//      case FIELD_CENTRIC_IMU:
+//      {
+//        while (!isStarted() && !isStopRequested())
+//        {
+//          telemetry.addLine("> Current offset is " + robotAngleOffset);
+//          telemetry.addLine("> Press left bumper to reset to current heading");
+//          telemetry.update();
+//
+//          if (gamepad1.left_bumper)
+//          {
+//            robotAngleOffset = driveEngine.getHeadingOffset(robotAngleOffset);
+//          }
+//        }
+//      }
+//      break;
 
       default:
       {

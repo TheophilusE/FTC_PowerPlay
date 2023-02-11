@@ -342,7 +342,7 @@ public class DriveEngine extends MecanumDrive
   public double getHeadingOffset(double offset)
   {
     // Get Robot heading given an offset in radians
-    double angle = imu.getRobotAngularVelocity(AngleUnit.RADIANS).zRotationRate;
+    double angle = imu.getRobotYawPitchRollAngles().getYaw(AngleUnit.RADIANS);
     angle = AngleUnit.normalizeRadians(angle - offset);
     return angle;
   }

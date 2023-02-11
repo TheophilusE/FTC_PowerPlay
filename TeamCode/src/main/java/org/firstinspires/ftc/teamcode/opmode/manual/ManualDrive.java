@@ -107,35 +107,35 @@ public class ManualDrive extends OpModeBase
     // [-1: Up,   1: Down]
     // [-1: Left, 1: Right]
 
-    // Update field relative offset if using the IMU.
-    if (Defines.DRIVE_MODE == Defines.DriveMode.FIELD_CENTRIC_IMU)
-    {
-      double heading = driveEngine.getHeadingOffset(robotAngleOffset);
-
-      if (gamepad1.left_bumper && gamepad1.a && !previousState)
-      {
-        robotAngleOffset += heading;
-      }
-
-      previousState = gamepad1.left_bumper && gamepad1.a;
-    }
-
     // Supply drive subsystem with human input coefficients.
     {
       DriveSubsystem driveSubsystem = getComponent(DriveSubsystem.class);
       if (driveSubsystem != null)
       {
+        // Update field relative offset if using the IMU.
+        if (Defines.DRIVE_MODE == Defines.DriveMode.FIELD_CENTRIC_IMU)
+        {
+          double heading = driveEngine.getHeadingOffset(driveSubsystem.getCurrentHeadingOffset());
+
+          if (gamepad1.left_bumper && gamepad1.a && !previousState)
+          {
+            driveSubsystem.setHeading(driveSubsystem.getCurrentHeadingOffset() + heading);
+          }
+
+          previousState = gamepad1.left_bumper && gamepad1.a;
+        }
+
         // Set the current drive mode that may have been updated through the dashboard.
         driveSubsystem.setDriveMode(Defines.DRIVE_MODE);
-
-        // Set movement vector from GamePad input.
-        driveSubsystem.setMovementVector(new Vector3d(gamepad1.left_stick_x, -gamepad1.left_stick_y, gamepad1.right_stick_x));
 
         // Update heading if using the IMU for the field relative drive mode.
         if (Defines.DRIVE_MODE == Defines.DriveMode.FIELD_CENTRIC_IMU)
         {
-          driveSubsystem.setHeading(driveEngine.getHeadingOffset(robotAngleOffset));
+          driveSubsystem.setHeading(driveEngine.getHeadingOffset(driveSubsystem.getCurrentHeadingOffset()));
         }
+
+        // Set movement vector from GamePad input.
+        driveSubsystem.setMovementVector(new Vector3d(gamepad1.left_stick_x, -gamepad1.left_stick_y, gamepad1.right_stick_x));
       }
     }
   }
