@@ -32,7 +32,7 @@ public class ShippingElementPipeline extends OpenCvPipeline
   public static int centerMarkerPositionWidth  = 40;
   public static int centerMarkerPositionHeight = 40;
 
-  public static double   minThresholdValue = 100; // Smaller values equal more precision
+  public static double   minThresholdValue = 200; // Smaller values equal more precision
   private final Mat      yCrCbMat          = new Mat();
   public        Vector3d yCrCbFinalColor   = new Vector3d();
   public        Vector3d rgbFinalColor     = new Vector3d();
