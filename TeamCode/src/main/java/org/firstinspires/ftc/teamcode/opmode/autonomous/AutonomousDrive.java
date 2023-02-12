@@ -123,7 +123,8 @@ public class AutonomousDrive extends OpModeBase
     // Ensure that we are not moving in idle state.
     driveEngine.setZeroPower();
 
-    if (getVisionState() == Defines.ParkTargetSignal.SIGNAL_NONE)
+    // Perform a scan to ensure that the correct colour is being detected, due to the fact that
+    // The park signal is randomized after initialization.
     {
       ElapsedTime waitTime    = new ElapsedTime();
       double      maxWaitTime = 5000; // Milliseconds
@@ -189,17 +190,17 @@ public class AutonomousDrive extends OpModeBase
       case SIGNAL_ONE:
       {
         ElapsedTime elapsedTime = new ElapsedTime();
-        while (elapsedTime.milliseconds() < 1150)
+        while (elapsedTime.milliseconds() < 1380)
         {
-          driveSubsystem.setMovementVector(new Vector3d(0, 1, 0));
+          driveSubsystem.setMovementVector(new Vector3d(-1, 0, 0));
           driveSubsystem.updateMovementStateDifferentialTrigRC();
         }
 
         elapsedTime.reset();
 
-        while (elapsedTime.milliseconds() < 1750)
+        while (elapsedTime.milliseconds() < 1300)
         {
-          driveSubsystem.setMovementVector(new Vector3d(-1, 0, 0));
+          driveSubsystem.setMovementVector(new Vector3d(0, 1, 0));
           driveSubsystem.updateMovementStateDifferentialTrigRC();
         }
         driveSubsystem.setMovementVector(new Vector3d(0, 0, 0));
@@ -211,7 +212,7 @@ public class AutonomousDrive extends OpModeBase
       case SIGNAL_TWO:
       {
         ElapsedTime elapsedTime = new ElapsedTime();
-        while (elapsedTime.milliseconds() < 1600)
+        while (elapsedTime.milliseconds() < 1500)
         {
           driveSubsystem.setMovementVector(new Vector3d(0, 1, 0));
           driveSubsystem.updateMovementStateDifferentialTrigRC();
@@ -225,17 +226,17 @@ public class AutonomousDrive extends OpModeBase
       case SIGNAL_THREE:
       {
         ElapsedTime elapsedTime = new ElapsedTime();
-        while (elapsedTime.milliseconds() < 1150)
+        while (elapsedTime.milliseconds() < 1050)
         {
-          driveSubsystem.setMovementVector(new Vector3d(0, 1, 0));
+          driveSubsystem.setMovementVector(new Vector3d(1, 0, 0));
           driveSubsystem.updateMovementStateDifferentialTrigRC();
         }
 
         elapsedTime.reset();
 
-        while (elapsedTime.milliseconds() < 950)
+        while (elapsedTime.milliseconds() < 1150)
         {
-          driveSubsystem.setMovementVector(new Vector3d(1, 0, 0));
+          driveSubsystem.setMovementVector(new Vector3d(0, 1, 0));
           driveSubsystem.updateMovementStateDifferentialTrigRC();
         }
         driveSubsystem.setMovementVector(new Vector3d(0, 0, 0));
