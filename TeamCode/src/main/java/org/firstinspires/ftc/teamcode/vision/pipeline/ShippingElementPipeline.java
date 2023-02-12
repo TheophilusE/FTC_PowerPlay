@@ -29,8 +29,8 @@ public class ShippingElementPipeline extends OpenCvPipeline
   public static double centerMarkerPositionX = 0.5;
   public static double centerMarkerPositionY = 0.5;
 
-  public static int centerMarkerPositionWidth  = 20;
-  public static int centerMarkerPositionHeight = 20;
+  public static int centerMarkerPositionWidth  = 40;
+  public static int centerMarkerPositionHeight = 40;
 
   public static double   minThresholdValue = 100; // Smaller values equal more precision
   private final Mat      yCrCbMat          = new Mat();

@@ -96,7 +96,7 @@ public class DriveSubsystem extends SubsystemBase
     m_robotAngleOffset = heading;
   }
 
-  protected void updateMovementStateDifferentialRC()
+  public void updateMovementStateDifferentialRC()
   {
     double y  = m_movementVector.y;
     double x  = m_movementVector.x * 1.1; // Counteract imperfect strafing
@@ -124,7 +124,7 @@ public class DriveSubsystem extends SubsystemBase
     m_driveEngine.setMotorPowers(leftFrontPower, leftRearPower, rightRearPower, rightFrontPower);
   }
 
-  protected void updateMovementStateDifferentialTrigRC()
+  public void updateMovementStateDifferentialTrigRC()
   {
     double length   = Math.hypot(m_movementVector.x, m_movementVector.y);
     double angle    = Math.atan2(m_movementVector.y, m_movementVector.x) - (Math.PI * 0.25);
@@ -174,7 +174,7 @@ public class DriveSubsystem extends SubsystemBase
     m_driveEngine.setMotorPowers(leftFrontPower, leftRearPower, rightRearPower, rightFrontPower);
   }
 
-  protected void updateMovementStateGamepadFC()
+  public void updateMovementStateGamepadFC()
   {
     // Get current position estimate
     Pose2d currentPosition = m_driveEngine.getPoseEstimate();
@@ -196,7 +196,7 @@ public class DriveSubsystem extends SubsystemBase
     m_telemetry.addData("> Heading", currentPosition.getHeading());
   }
 
-  protected void updateMovementStateIMUFC()
+  public void updateMovementStateIMUFC()
   {
     double heading = m_driveEngine.getHeadingOffset(m_robotAngleOffset);
 

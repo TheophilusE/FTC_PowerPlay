@@ -8,8 +8,10 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 import org.firstinspires.ftc.teamcode.control.derived.AutonomousUtils;
 import org.firstinspires.ftc.teamcode.control.trajectorysequence.TrajectorySequence;
 import org.firstinspires.ftc.teamcode.hardware.commands.FollowTrajectorySequenceCommand;
+import org.firstinspires.ftc.teamcode.hardware.subsystems.DriveSubsystem;
 import org.firstinspires.ftc.teamcode.hardware.subsystems.LiftSubsystem;
 import org.firstinspires.ftc.teamcode.hardware.subsystems.VisionCVSubsystem;
+import org.firstinspires.ftc.teamcode.math.Vector3d;
 import org.firstinspires.ftc.teamcode.opmode.Defines;
 import org.firstinspires.ftc.teamcode.opmode.OpModeBase;
 import org.firstinspires.ftc.teamcode.statemachine.StateMachine;
@@ -32,45 +34,32 @@ public class AutonomousDrive extends OpModeBase
   StateMachine<Defines.AutonomousFSMState, Defines.AutonomousFSMTrigger>       m_StateMachine;
   StateMachineConfig<Defines.AutonomousFSMState, Defines.AutonomousFSMTrigger> m_StateMachineConfig;
 
+  boolean initialized = false;
+
   @Override
   public void initialize()
   {
     super.initialize();
 
     AutonomousUtils.Initialize();
-
-    // Configure autonomous states.
-    {
-      m_StateMachineConfig = new StateMachineConfig<>();
-
-      // If we are currently idling, switch to the evaluate vision state.
-      m_StateMachineConfig.configure(Defines.AutonomousFSMState.IDLE_STATE)
-          .onEntry(this::enterIdleState)
-          .permit(Defines.AutonomousFSMTrigger.IDLING, Defines.AutonomousFSMState.EVALUATE_VISION);
-
-      // When evaluating vision, if a valid park zone is detected immediately perform park in target
-      // zone. If not found, try to get a valid target and switch to default park if not found.
-      m_StateMachineConfig.configure(Defines.AutonomousFSMState.EVALUATE_VISION)
-          .onEntry(this::evaluateVision)
-          .permit(Defines.AutonomousFSMTrigger.NO_PARK_SIGNAL_FOUND, Defines.AutonomousFSMState.DEFAULT_PARK)
-          .permit(Defines.AutonomousFSMTrigger.VALID_PARK_SIGNAL_FOUND, Defines.AutonomousFSMState.PARK_IN_SIGNAL_ZONE);
-
-      // If in default park state, schedule the park command in the default park zone.
-      m_StateMachineConfig.configure(Defines.AutonomousFSMState.DEFAULT_PARK)
-          .onEntry(this::scheduleAutonomousTrajectoryDefaultPark);
-
-      // If a valid park signal is found, schedule a park command based on the target signal.
-      m_StateMachineConfig.configure(Defines.AutonomousFSMState.PARK_IN_SIGNAL_ZONE)
-          .onEntry(this::scheduleAutonomousParkSignalTrajectory);
-
-      m_StateMachine = new StateMachine<>(Defines.autonomousFSMState, m_StateMachineConfig);
-    }
   }
 
   @Override
   public void registerSubsystems()
   {
     super.registerSubsystems();
+
+    AutonomousUtils.Initialize();
+
+    // Register Drive Subsystem
+    {
+      telemetry.addLine("> Register Drive Subsystem...");
+      telemetry.update();
+
+      DriveSubsystem driveSubsystem = new DriveSubsystem(driveEngine, telemetry, Defines.DRIVE_MODE);
+
+      addSubsystem(driveSubsystem);
+    }
 
     // Register Lift Subsystem
     {
@@ -96,6 +85,37 @@ public class AutonomousDrive extends OpModeBase
   @Override
   public void update()
   {
+    if (!initialized)
+    {
+      // Configure autonomous states.
+      {
+        m_StateMachineConfig = new StateMachineConfig<>();
+
+        // If we are currently idling, switch to the evaluate vision state.
+        m_StateMachineConfig.configure(Defines.AutonomousFSMState.IDLE_STATE)
+            .onEntry(this::enterIdleState)
+            .permit(Defines.AutonomousFSMTrigger.IDLING, Defines.AutonomousFSMState.EVALUATE_VISION);
+
+        // When evaluating vision, if a valid park zone is detected immediately perform park in target
+        // zone. If not found, try to get a valid target and switch to default park if not found.
+        m_StateMachineConfig.configure(Defines.AutonomousFSMState.EVALUATE_VISION)
+            .onEntry(this::evaluateVision)
+            .permit(Defines.AutonomousFSMTrigger.NO_PARK_SIGNAL_FOUND, Defines.AutonomousFSMState.DEFAULT_PARK)
+            .permit(Defines.AutonomousFSMTrigger.VALID_PARK_SIGNAL_FOUND, Defines.AutonomousFSMState.PARK_IN_SIGNAL_ZONE);
+
+        // If in default park state, schedule the park command in the default park zone.
+        m_StateMachineConfig.configure(Defines.AutonomousFSMState.DEFAULT_PARK)
+            .onEntry(this::scheduleDefaultPark);
+
+        // If a valid park signal is found, schedule a park command based on the target signal.
+        m_StateMachineConfig.configure(Defines.AutonomousFSMState.PARK_IN_SIGNAL_ZONE)
+            .onEntry(this::scheduleAutonomousParkSignal);
+
+        m_StateMachine = new StateMachine<>(Defines.autonomousFSMState, m_StateMachineConfig);
+        m_StateMachine.fire(Defines.AutonomousFSMTrigger.IDLING);
+      }
+      initialized = true;
+    }
   }
 
   public void enterIdleState()
@@ -126,6 +146,108 @@ public class AutonomousDrive extends OpModeBase
     } else
     {
       m_StateMachine.fire(Defines.AutonomousFSMTrigger.NO_PARK_SIGNAL_FOUND);
+    }
+  }
+
+  // TODO: Set time
+  public void scheduleDefaultPark()
+  {
+    DriveSubsystem driveSubsystem = getComponent(DriveSubsystem.class);
+    if (driveSubsystem != null)
+    {
+      ElapsedTime elapsedTime = new ElapsedTime();
+      while (elapsedTime.milliseconds() < 1500)
+      {
+        if (Defines.BLUE_ALLIANCE)
+        {
+          driveSubsystem.setMovementVector(new Vector3d(1, 0, 0));
+          driveSubsystem.updateMovementStateDifferentialTrigRC();
+        } else
+        {
+          driveSubsystem.setMovementVector(new Vector3d(-1, 0, 0));
+        }
+      }
+      driveSubsystem.setMovementVector(new Vector3d(0, 0, 0));
+      driveSubsystem.updateMovementStateDifferentialTrigRC();
+    }
+  }
+
+  // TODO: Change time
+  public void scheduleAutonomousParkSignal()
+  {
+    DriveSubsystem driveSubsystem = getComponent(DriveSubsystem.class);
+    if (driveSubsystem == null)
+    {
+      return;
+    }
+
+    Defines.ParkTargetSignal parkTargetSignal = getVisionState();
+
+    switch (parkTargetSignal)
+    {
+      /// Park in the leftward zone
+      case SIGNAL_ONE:
+      {
+        ElapsedTime elapsedTime = new ElapsedTime();
+        while (elapsedTime.milliseconds() < 1150)
+        {
+          driveSubsystem.setMovementVector(new Vector3d(0, 1, 0));
+          driveSubsystem.updateMovementStateDifferentialTrigRC();
+        }
+
+        elapsedTime.reset();
+
+        while (elapsedTime.milliseconds() < 1750)
+        {
+          driveSubsystem.setMovementVector(new Vector3d(-1, 0, 0));
+          driveSubsystem.updateMovementStateDifferentialTrigRC();
+        }
+        driveSubsystem.setMovementVector(new Vector3d(0, 0, 0));
+        driveSubsystem.updateMovementStateDifferentialTrigRC();
+      }
+      break;
+
+      /// Park in the zone in front of the robot.
+      case SIGNAL_TWO:
+      {
+        ElapsedTime elapsedTime = new ElapsedTime();
+        while (elapsedTime.milliseconds() < 1600)
+        {
+          driveSubsystem.setMovementVector(new Vector3d(0, 1, 0));
+          driveSubsystem.updateMovementStateDifferentialTrigRC();
+        }
+        driveSubsystem.setMovementVector(new Vector3d(0, 0, 0));
+        driveSubsystem.updateMovementStateDifferentialTrigRC();
+      }
+      break;
+
+      /// Park in the zone rightward of the robot.
+      case SIGNAL_THREE:
+      {
+        ElapsedTime elapsedTime = new ElapsedTime();
+        while (elapsedTime.milliseconds() < 1150)
+        {
+          driveSubsystem.setMovementVector(new Vector3d(0, 1, 0));
+          driveSubsystem.updateMovementStateDifferentialTrigRC();
+        }
+
+        elapsedTime.reset();
+
+        while (elapsedTime.milliseconds() < 950)
+        {
+          driveSubsystem.setMovementVector(new Vector3d(1, 0, 0));
+          driveSubsystem.updateMovementStateDifferentialTrigRC();
+        }
+        driveSubsystem.setMovementVector(new Vector3d(0, 0, 0));
+        driveSubsystem.updateMovementStateDifferentialTrigRC();
+      }
+      break;
+
+      default:
+      {
+        telemetry.addData("> ", parkTargetSignal.toString() + " Is unhandled by the method.");
+      }
+      break;
     }
   }
 
